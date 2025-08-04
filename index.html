@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图文格式转换工具 - 在线文件处理平台</title>
+    <meta name="description" content="专业的在线图文格式转换工具，支持文件转换、图片压缩、图片裁剪、格式转换、图片水印等功能">
+    <meta name="keywords" content="文件转换,图片压缩,图片裁剪,格式转换,图片水印,在线工具">
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/home.css">
+    
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 网站图标 -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-tools"></i>
+                <span>图文格式转换工具</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="pages/file-convert.html" class="nav-link">文件转换</a></li>
+                <li><a href="pages/image-compress.html" class="nav-link">图片压缩</a></li>
+                <li><a href="pages/image-crop.html" class="nav-link">图片裁剪</a></li>
+                <li><a href="pages/image-convert.html" class="nav-link">格式转换</a></li>
+                <li><a href="pages/image-watermark.html" class="nav-link">图片水印</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">专业的图文格式转换工具</h1>
+                    <p class="hero-subtitle">一站式在线文件处理平台，支持多种格式转换和处理功能</p>
+                    <div class="hero-features">
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>安全可靠</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-bolt"></i>
+                            <span>快速处理</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-lock"></i>
+                            <span>隐私保护</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="floating-card">
+                        <i class="fas fa-file-alt"></i>
+                        <span>文件转换</span>
+                    </div>
+                    <div class="floating-card">
+                        <i class="fas fa-compress-alt"></i>
+                        <span>图片压缩</span>
+                    </div>
+                    <div class="floating-card">
+                        <i class="fas fa-crop-alt"></i>
+                        <span>图片裁剪</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 功能卡片区域 -->
+        <section class="features-section">
+            <div class="container">
+                <h2 class="section-title">功能特色</h2>
+                <p class="section-subtitle">选择您需要的功能，开始处理您的文件</p>
+                
+                <div class="features-grid">
+                    <!-- 文件转换卡片 -->
+                    <div class="feature-card" onclick="location.href='pages/file-convert.html'">
+                        <div class="card-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3 class="card-title">文件转换</h3>
+                        <p class="card-description">支持PDF、DOC、TXT等多种格式互转，一键转换，保持原格式质量</p>
+                        <div class="card-features">
+                            <span class="feature-tag">PDF转DOC</span>
+                            <span class="feature-tag">DOC转PDF</span>
+                            <span class="feature-tag">批量处理</span>
+                        </div>
+                        <div class="card-action">
+                            <span>开始转换</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- 图片压缩卡片 -->
+                    <div class="feature-card" onclick="location.href='pages/image-compress.html'">
+                        <div class="card-icon">
+                            <i class="fas fa-compress-alt"></i>
+                        </div>
+                        <h3 class="card-title">图片压缩</h3>
+                        <p class="card-description">智能压缩图片文件，大幅减小文件体积，同时保持图片质量</p>
+                        <div class="card-features">
+                            <span class="feature-tag">JPG压缩</span>
+                            <span class="feature-tag">PNG压缩</span>
+                            <span class="feature-tag">质量调节</span>
+                        </div>
+                        <div class="card-action">
+                            <span>开始压缩</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- 图片裁剪卡片 -->
+                    <div class="feature-card" onclick="location.href='pages/image-crop.html'">
+                        <div class="card-icon">
+                            <i class="fas fa-crop-alt"></i>
+                        </div>
+                        <h3 class="card-title">图片裁剪</h3>
+                        <p class="card-description">可视化裁剪工具，支持多种比例预设，精确裁剪您需要的部分</p>
+                        <div class="card-features">
+                            <span class="feature-tag">自由裁剪</span>
+                            <span class="feature-tag">比例预设</span>
+                            <span class="feature-tag">旋转翻转</span>
+                        </div>
+                        <div class="card-action">
+                            <span>开始裁剪</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- 格式转换卡片 -->
+                    <div class="feature-card" onclick="location.href='pages/image-convert.html'">
+                        <div class="card-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h3 class="card-title">格式转换</h3>
+                        <p class="card-description">支持JPG、PNG、WEBP、GIF等多种图片格式互转，满足不同需求</p>
+                        <div class="card-features">
+                            <span class="feature-tag">JPG转PNG</span>
+                            <span class="feature-tag">PNG转WEBP</span>
+                            <span class="feature-tag">批量转换</span>
+                        </div>
+                        <div class="card-action">
+                            <span>开始转换</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- 图片水印卡片 -->
+                    <div class="feature-card" onclick="location.href='pages/image-watermark.html'">
+                        <div class="card-icon">
+                            <i class="fas fa-stamp"></i>
+                        </div>
+                        <h3 class="card-title">图片水印</h3>
+                        <p class="card-description">添加文字或图片水印，保护您的作品版权，支持多种样式设置</p>
+                        <div class="card-features">
+                            <span class="feature-tag">文字水印</span>
+                            <span class="feature-tag">图片水印</span>
+                            <span class="feature-tag">位置调节</span>
+                        </div>
+                        <div class="card-action">
+                            <span>添加水印</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 优势介绍区域 -->
+        <section class="advantages-section">
+            <div class="container">
+                <h2 class="section-title">为什么选择我们</h2>
+                <div class="advantages-grid">
+                    <div class="advantage-item">
+                        <div class="advantage-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>安全可靠</h3>
+                        <p>所有文件处理在本地完成，不上传到服务器，保护您的隐私安全</p>
+                    </div>
+                    <div class="advantage-item">
+                        <div class="advantage-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3>快速处理</h3>
+                        <p>采用先进的Web技术，处理速度快，支持大文件处理</p>
+                    </div>
+                    <div class="advantage-item">
+                        <div class="advantage-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>多端支持</h3>
+                        <p>响应式设计，支持电脑、手机、平板等各种设备访问</p>
+                    </div>
+                    <div class="advantage-item">
+                        <div class="advantage-icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h3>简单易用</h3>
+                        <p>界面简洁直观，操作简单，无需学习成本</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>图文格式转换工具</h3>
+                    <p>专业的在线文件处理平台，为您提供便捷的文件转换和处理服务。</p>
+                </div>
+                <div class="footer-section">
+                    <h4>功能服务</h4>
+                    <ul>
+                        <li><a href="pages/file-convert.html">文件转换</a></li>
+                        <li><a href="pages/image-compress.html">图片压缩</a></li>
+                        <li><a href="pages/image-crop.html">图片裁剪</a></li>
+                        <li><a href="pages/image-convert.html">格式转换</a></li>
+                        <li><a href="pages/image-watermark.html">图片水印</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>技术支持</h4>
+                    <ul>
+                        <li><a href="#">使用帮助</a></li>
+                        <li><a href="#">常见问题</a></li>
+                        <li><a href="#">联系我们</a></li>
+                        <li><a href="#">意见反馈</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 图文格式转换工具. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript文件 -->
+    <script src="js/common.js"></script>
+    <script src="js/navigation.js"></script>
+</body>
+</html> 

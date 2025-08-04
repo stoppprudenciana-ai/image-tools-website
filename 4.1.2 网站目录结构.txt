@@ -1,0 +1,151 @@
+# 图文格式转换工具 - 网站目录结构
+
+## 项目根目录
+```
+图文格式转换工具/
+├── index.html                    # 网站首页
+├── pages/                        # 功能页面目录
+│   ├── file-convert.html         # 文件转换页面
+│   ├── image-compress.html       # 图片压缩页面
+│   ├── image-crop.html           # 图片裁剪页面
+│   ├── image-convert.html        # 图片格式转换页面
+│   └── image-watermark.html      # 图片水印页面
+├── css/                          # 样式文件目录
+│   ├── common.css                # 公共样式（导航、布局、按钮等）
+│   ├── home.css                  # 首页专用样式
+│   ├── pages.css                 # 功能页面通用样式
+│   ├── file-convert.css          # 文件转换页面样式
+│   ├── image-compress.css        # 图片压缩页面样式
+│   ├── image-crop.css            # 图片裁剪页面样式
+│   ├── image-convert.css         # 图片格式转换页面样式
+│   └── image-watermark.css       # 图片水印页面样式
+├── js/                           # JavaScript文件目录
+│   ├── common.js                 # 公共函数（文件上传、下载、工具函数等）
+│   ├── navigation.js             # 导航菜单功能
+│   ├── file-convert.js           # 文件转换功能
+│   ├── image-compress.js         # 图片压缩功能
+│   ├── image-crop.js             # 图片裁剪功能
+│   ├── image-convert.js          # 图片格式转换功能
+│   ├── image-watermark.js        # 图片水印功能
+│   └── workers/                  # Web Workers目录
+│       ├── file-convert-worker.js    # 文件转换Worker
+│       ├── image-compress-worker.js  # 图片压缩Worker
+│       └── image-convert-worker.js   # 图片格式转换Worker
+├── lib/                          # 第三方库目录
+│   ├── pdf.js                    # PDF处理库
+│   ├── pdf.worker.js             # PDF Worker文件
+│   ├── mammoth.js                # DOC文件处理库
+│   ├── fabric.js                 # Canvas操作库
+│   └── jszip.js                  # 文件压缩库
+├── assets/                       # 静态资源目录
+│   ├── images/                   # 图片资源目录
+│   │   ├── logo.png              # 网站Logo
+│   │   ├── icons/                # 图标目录
+│   │   │   ├── file-convert.svg  # 文件转换图标
+│   │   │   ├── image-compress.svg # 图片压缩图标
+│   │   │   ├── image-crop.svg    # 图片裁剪图标
+│   │   │   ├── image-convert.svg # 图片格式转换图标
+│   │   │   └── image-watermark.svg # 图片水印图标
+│   │   ├── backgrounds/          # 背景图片目录
+│   │   │   ├── hero-bg.jpg       # 首页背景
+│   │   │   └── pattern.svg       # 装饰图案
+│   │   └── placeholders/         # 占位图片目录
+│   │       ├── upload-area.png   # 上传区域占位图
+│   │       └── preview-placeholder.png # 预览占位图
+│   ├── fonts/                    # 字体文件目录
+│   │   ├── main-font.woff2       # 主字体文件
+│   │   └── icon-font.woff2       # 图标字体文件
+│   └── favicon/                  # 网站图标目录
+│       ├── favicon.ico           # 网站图标
+│       ├── apple-touch-icon.png  # iOS图标
+│       └── android-chrome.png    # Android图标
+├── docs/                         # 文档目录
+│   ├── api/                      # API文档
+│   │   ├── file-convert-api.md   # 文件转换API
+│   │   ├── image-compress-api.md # 图片压缩API
+│   │   ├── image-crop-api.md     # 图片裁剪API
+│   │   ├── image-convert-api.md  # 图片格式转换API
+│   │   └── image-watermark-api.md # 图片水印API
+│   ├── user-guide/               # 用户指南
+│   │   ├── getting-started.md    # 快速开始
+│   │   ├── file-convert-guide.md # 文件转换指南
+│   │   ├── image-compress-guide.md # 图片压缩指南
+│   │   ├── image-crop-guide.md   # 图片裁剪指南
+│   │   ├── image-convert-guide.md # 图片格式转换指南
+│   │   └── image-watermark-guide.md # 图片水印指南
+│   └── developer/                # 开发者文档
+│       ├── architecture.md       # 架构设计
+│       ├── coding-standards.md   # 编码规范
+│       └── deployment.md         # 部署指南
+├── tests/                        # 测试文件目录
+│   ├── unit/                     # 单元测试
+│   │   ├── file-convert.test.js  # 文件转换测试
+│   │   ├── image-compress.test.js # 图片压缩测试
+│   │   ├── image-crop.test.js    # 图片裁剪测试
+│   │   ├── image-convert.test.js # 图片格式转换测试
+│   │   └── image-watermark.test.js # 图片水印测试
+│   ├── integration/              # 集成测试
+│   │   └── e2e.test.js          # 端到端测试
+│   └── fixtures/                 # 测试数据
+│       ├── sample.pdf            # 测试用PDF文件
+│       ├── sample.doc            # 测试用DOC文件
+│       ├── sample.jpg            # 测试用JPG图片
+│       ├── sample.png            # 测试用PNG图片
+│       └── sample.webp           # 测试用WEBP图片
+├── config/                       # 配置文件目录
+│   ├── webpack.config.js         # Webpack配置（如果需要）
+│   ├── babel.config.js           # Babel配置
+│   └── eslint.config.js          # ESLint配置
+├── scripts/                      # 构建脚本目录
+│   ├── build.js                  # 构建脚本
+│   ├── deploy.js                 # 部署脚本
+│   └── optimize.js               # 优化脚本
+├── .gitignore                    # Git忽略文件
+├── .eslintrc.js                  # ESLint配置
+├── .prettierrc                   # Prettier配置
+├── package.json                  # 项目依赖配置
+├── README.md                     # 项目说明文档
+├── CHANGELOG.md                  # 版本更新日志
+├── LICENSE                       # 开源许可证
+└── robots.txt                    # 搜索引擎爬虫配置
+```
+
+## 文件说明
+
+### 核心文件
+- **index.html**: 网站首页，包含导航菜单和功能卡片
+- **pages/**: 包含所有功能页面的HTML文件
+- **css/**: 样式文件，按功能模块分类
+- **js/**: JavaScript文件，包含所有交互逻辑
+- **lib/**: 第三方库文件，用于文件处理
+
+### 资源文件
+- **assets/images/**: 图片资源，包括Logo、图标、背景等
+- **assets/fonts/**: 字体文件，确保跨平台显示一致
+- **assets/favicon/**: 网站图标，适配不同设备
+
+### 文档文件
+- **docs/**: 完整的项目文档，包括API文档、用户指南、开发者文档
+- **tests/**: 测试文件，确保代码质量和功能正确性
+
+### 配置文件
+- **config/**: 各种配置文件，用于开发工具和代码规范
+- **scripts/**: 自动化脚本，用于构建和部署
+
+## 命名规范
+
+### 文件命名
+- HTML文件：kebab-case（如：file-convert.html）
+- CSS文件：kebab-case（如：file-convert.css）
+- JS文件：kebab-case（如：file-convert.js）
+- 图片文件：小写字母和数字（如：logo.png）
+
+### 目录命名
+- 使用小写字母
+- 多个单词用连字符分隔
+- 避免使用空格和特殊字符
+
+### 版本控制
+- 使用Git进行版本控制
+- 遵循语义化版本号（如：1.0.0）
+- 保持提交信息清晰明确 

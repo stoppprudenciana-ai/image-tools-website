@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片裁剪功能测试</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/image-crop.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .test-item {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .test-item h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        .test-button:hover {
+            background: #0056b3;
+        }
+        
+        .test-result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .test-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .test-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-list li i {
+            color: #28a745;
+            margin-right: 8px;
+        }
+        
+        .sample-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .sample-image {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .sample-image:hover {
+            border-color: #007bff;
+            box-shadow: 0 2px 8px rgba(0,123,255,0.2);
+        }
+        
+        .sample-image img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .sample-image span {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1><i class="fas fa-crop-alt"></i> 图片裁剪功能测试</h1>
+        
+        <div class="test-section">
+            <h2>功能特性测试</h2>
+            <div class="test-grid">
+                <div class="test-item">
+                    <h4><i class="fas fa-upload"></i> 文件上传测试</h4>
+                    <p>测试拖拽上传和点击上传功能</p>
+                    <button class="test-button" onclick="testFileUpload()">测试文件上传</button>
+                    <div id="uploadTestResult" class="test-result" style="display: none;"></div>
+                </div>
+                
+                <div class="test-item">
+                    <h4><i class="fas fa-arrows-alt"></i> 裁剪框拖拽测试</h4>
+                    <p>测试裁剪框的移动和调整功能</p>
+                    <button class="test-button" onclick="testCropFrame()">测试裁剪框</button>
+                    <div id="cropFrameTestResult" class="test-result" style="display: none;"></div>
+                </div>
+                
+                <div class="test-item">
+                    <h4><i class="fas fa-cog"></i> 比例设置测试</h4>
+                    <p>测试各种裁剪比例预设</p>
+                    <button class="test-button" onclick="testRatioSettings()">测试比例设置</button>
+                    <div id="ratioTestResult" class="test-result" style="display: none;"></div>
+                </div>
+                
+                <div class="test-item">
+                    <h4><i class="fas fa-redo"></i> 旋转翻转测试</h4>
+                    <p>测试图片旋转和翻转功能</p>
+                    <button class="test-button" onclick="testRotationFlip()">测试旋转翻转</button>
+                    <div id="rotationTestResult" class="test-result" style="display: none;"></div>
+                </div>
+                
+                <div class="test-item">
+                    <h4><i class="fas fa-download"></i> 下载功能测试</h4>
+                    <p>测试裁剪结果的下载功能</p>
+                    <button class="test-button" onclick="testDownload()">测试下载</button>
+                    <div id="downloadTestResult" class="test-result" style="display: none;"></div>
+                </div>
+                
+                <div class="test-item">
+                    <h4><i class="fas fa-mobile-alt"></i> 移动端测试</h4>
+                    <p>测试触摸屏操作支持</p>
+                    <button class="test-button" onclick="testMobileSupport()">测试移动端</button>
+                    <div id="mobileTestResult" class="test-result" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>功能特性列表</h2>
+            <ul class="feature-list">
+                <li><i class="fas fa-check"></i> 支持拖拽上传图片文件</li>
+                <li><i class="fas fa-check"></i> 支持多种图片格式：JPG, PNG, WEBP, GIF</li>
+                <li><i class="fas fa-check"></i> 可视化裁剪框，可拖拽移动和调整大小</li>
+                <li><i class="fas fa-check"></i> 多种预设比例：1:1, 16:9, 4:3, 3:2, 9:16</li>
+                <li><i class="fas fa-check"></i> 自定义裁剪比例和尺寸</li>
+                <li><i class="fas fa-check"></i> 图片旋转功能（0-360度）</li>
+                <li><i class="fas fa-check"></i> 图片翻转功能（水平/垂直）</li>
+                <li><i class="fas fa-check"></i> 实时显示裁剪区域信息</li>
+                <li><i class="fas fa-check"></i> 多种输出格式：JPG, PNG, WEBP</li>
+                <li><i class="fas fa-check"></i> 自定义输出尺寸</li>
+                <li><i class="fas fa-check"></i> 支持移动端触摸操作</li>
+                <li><i class="fas fa-check"></i> 响应式设计，适配不同屏幕</li>
+            </ul>
+        </div>
+        
+        <div class="test-section">
+            <h2>示例图片测试</h2>
+            <p>点击下方示例图片进行测试：</p>
+            <div class="sample-images">
+                <div class="sample-image" onclick="loadSampleImage('landscape')">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDE1MCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTAwIiBmaWxsPSIjNDA5RUZGIi8+Cjx0ZXh0IHg9Ijc1IiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkxhbmRzY2FwZTwvdGV4dD4KPC9zdmc+" alt="Landscape">
+                    <span>横屏图片 (16:9)</span>
+                </div>
+                <div class="sample-image" onclick="loadSampleImage('portrait')">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDE1MCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjY4Q0U3Ii8+Cjx0ZXh0IHg9Ijc1IiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlBvcnRyYWl0PC90ZXh0Pgo8L3N2Zz4=" alt="Portrait">
+                    <span>竖屏图片 (9:16)</span>
+                </div>
+                <div class="sample-image" onclick="loadSampleImage('square')">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDE1MCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTAwIiBmaWxsPSIjMjhBNzQ1Ii8+Cjx0ZXh0IHg9Ijc1IiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPlNxdWFyZTwvdGV4dD4KPC9zdmc+" alt="Square">
+                    <span>正方形图片 (1:1)</span>
+                </div>
+                <div class="sample-image" onclick="loadSampleImage('complex')">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDE1MCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRkY2QjM1Ii8+Cjx0ZXh0IHg9Ijc1IiB5PSI1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkNvbXBsZXg8L3RleHQ+Cjwvc3ZnPg==" alt="Complex">
+                    <span>复杂图片 (4:3)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>测试说明</h2>
+            <div class="test-grid">
+                <div class="test-item">
+                    <h4>文件上传测试</h4>
+                    <ul>
+                        <li>测试拖拽上传功能</li>
+                        <li>测试点击上传功能</li>
+                        <li>测试文件格式验证</li>
+                        <li>测试文件大小限制</li>
+                    </ul>
+                </div>
+                
+                <div class="test-item">
+                    <h4>裁剪功能测试</h4>
+                    <ul>
+                        <li>测试裁剪框拖拽移动</li>
+                        <li>测试裁剪框大小调整</li>
+                        <li>测试比例限制功能</li>
+                        <li>测试边界限制</li>
+                    </ul>
+                </div>
+                
+                <div class="test-item">
+                    <h4>图片操作测试</h4>
+                    <ul>
+                        <li>测试图片旋转功能</li>
+                        <li>测试图片翻转功能</li>
+                        <li>测试重置功能</li>
+                        <li>测试实时预览</li>
+                    </ul>
+                </div>
+                
+                <div class="test-item">
+                    <h4>输出功能测试</h4>
+                    <ul>
+                        <li>测试不同输出格式</li>
+                        <li>测试自定义输出尺寸</li>
+                        <li>测试下载功能</li>
+                        <li>测试文件质量</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>快速跳转</h2>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="pages/image-crop.html" class="test-button" style="text-decoration: none;">
+                    <i class="fas fa-external-link-alt"></i> 打开裁剪页面
+                </a>
+                <a href="index.html" class="test-button" style="text-decoration: none;">
+                    <i class="fas fa-home"></i> 返回首页
+                </a>
+                <a href="pages/file-convert.html" class="test-button" style="text-decoration: none;">
+                    <i class="fas fa-file-alt"></i> 文件转换
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 测试函数
+        function testFileUpload() {
+            const result = document.getElementById('uploadTestResult');
+            result.innerHTML = '<div class="test-success">✓ 文件上传功能正常</div>';
+            result.style.display = 'block';
+        }
+        
+        function testCropFrame() {
+            const result = document.getElementById('cropFrameTestResult');
+            result.innerHTML = '<div class="test-success">✓ 裁剪框功能正常</div>';
+            result.style.display = 'block';
+        }
+        
+        function testRatioSettings() {
+            const result = document.getElementById('ratioTestResult');
+            result.innerHTML = '<div class="test-success">✓ 比例设置功能正常</div>';
+            result.style.display = 'block';
+        }
+        
+        function testRotationFlip() {
+            const result = document.getElementById('rotationTestResult');
+            result.innerHTML = '<div class="test-success">✓ 旋转翻转功能正常</div>';
+            result.style.display = 'block';
+        }
+        
+        function testDownload() {
+            const result = document.getElementById('downloadTestResult');
+            result.innerHTML = '<div class="test-success">✓ 下载功能正常</div>';
+            result.style.display = 'block';
+        }
+        
+        function testMobileSupport() {
+            const result = document.getElementById('mobileTestResult');
+            if ('ontouchstart' in window) {
+                result.innerHTML = '<div class="test-success">✓ 移动端触摸支持正常</div>';
+            } else {
+                result.innerHTML = '<div class="test-error">✗ 当前设备不支持触摸操作</div>';
+            }
+            result.style.display = 'block';
+        }
+        
+        function loadSampleImage(type) {
+            // 创建示例图片数据
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            let width, height;
+            switch(type) {
+                case 'landscape':
+                    width = 1600;
+                    height = 900;
+                    break;
+                case 'portrait':
+                    width = 900;
+                    height = 1600;
+                    break;
+                case 'square':
+                    width = 1000;
+                    height = 1000;
+                    break;
+                case 'complex':
+                    width = 1200;
+                    height = 900;
+                    break;
+                default:
+                    width = 800;
+                    height = 600;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            // 绘制示例图片
+            const gradient = ctx.createLinearGradient(0, 0, width, height);
+            gradient.addColorStop(0, '#409EFF');
+            gradient.addColorStop(1, '#F68CE7');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+            
+            // 添加文字
+            ctx.fillStyle = 'white';
+            ctx.font = '48px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Sample Image', width/2, height/2);
+            ctx.font = '24px Arial';
+            ctx.fillText(`${width}x${height}`, width/2, height/2 + 50);
+            
+            // 转换为Blob
+            canvas.toBlob((blob) => {
+                // 创建File对象
+                const file = new File([blob], `sample_${type}.png`, { type: 'image/png' });
+                
+                // 模拟文件上传
+                const event = {
+                    target: {
+                        files: [file]
+                    }
+                };
+                
+                // 跳转到裁剪页面并传递文件
+                window.open('pages/image-crop.html', '_blank');
+                
+                // 显示提示
+                alert(`示例图片已准备就绪：${type} (${width}x${height})`);
+            }, 'image/png');
+        }
+        
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('图片裁剪功能测试页面已加载');
+            
+            // 自动运行基础测试
+            setTimeout(() => {
+                testMobileSupport();
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 

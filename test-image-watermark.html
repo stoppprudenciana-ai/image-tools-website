@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片水印功能测试</title>
+    <meta name="description" content="测试图片水印功能的各项特性">
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/image-watermark.css">
+    
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .test-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .test-item {
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .test-item h4 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .test-result {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .test-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .test-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .test-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-tools"></i>
+                    <span>图文格式转换工具</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="pages/file-convert.html" class="nav-link">文件转换</a></li>
+                <li><a href="pages/image-compress.html" class="nav-link">图片压缩</a></li>
+                <li><a href="pages/image-crop.html" class="nav-link">图片裁剪</a></li>
+                <li><a href="pages/image-convert.html" class="nav-link">格式转换</a></li>
+                <li><a href="pages/image-watermark.html" class="nav-link">图片水印</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <div class="container">
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-vial"></i>
+                    图片水印功能测试
+                </h1>
+                <p class="page-subtitle">测试图片水印功能的各项特性和性能</p>
+            </div>
+
+            <!-- 功能测试区域 -->
+            <div class="test-section">
+                <h3 class="section-title">功能测试</h3>
+                <div class="test-grid">
+                    <div class="test-item">
+                        <h4>Canvas API 支持</h4>
+                        <p>测试浏览器是否支持Canvas API，这是水印功能的核心</p>
+                        <div id="canvasTest" class="test-result"></div>
+                    </div>
+                    
+                    <div class="test-item">
+                        <h4>文件API 支持</h4>
+                        <p>测试浏览器是否支持文件上传和拖拽功能</p>
+                        <div id="fileApiTest" class="test-result"></div>
+                    </div>
+                    
+                    <div class="test-item">
+                        <h4>JSZip 库加载</h4>
+                        <p>测试JSZip库是否正确加载，用于批量下载</p>
+                        <div id="jszipTest" class="test-result"></div>
+                    </div>
+                    
+                    <div class="test-item">
+                        <h4>图片处理性能</h4>
+                        <p>测试图片处理的速度和内存使用情况</p>
+                        <div id="performanceTest" class="test-result"></div>
+                    </div>
+                    
+                    <div class="test-item">
+                        <h4>水印渲染测试</h4>
+                        <p>测试文字水印和图片水印的渲染效果</p>
+                        <div id="watermarkRenderTest" class="test-result"></div>
+                    </div>
+                    
+                    <div class="test-item">
+                        <h4>位置计算测试</h4>
+                        <p>测试水印位置计算的准确性</p>
+                        <div id="positionTest" class="test-result"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 实际功能测试 -->
+            <div class="test-section">
+                <h3 class="section-title">实际功能测试</h3>
+                <p>点击下面的按钮测试实际的水印功能</p>
+                
+                <div class="action-section">
+                    <button class="btn btn-primary" id="testTextWatermark">
+                        <i class="fas fa-font"></i>
+                        测试文字水印
+                    </button>
+                    <button class="btn btn-success" id="testImageWatermark">
+                        <i class="fas fa-image"></i>
+                        测试图片水印
+                    </button>
+                    <button class="btn btn-info" id="testBatchProcess">
+                        <i class="fas fa-layer-group"></i>
+                        测试批量处理
+                    </button>
+                    <button class="btn btn-warning" id="testDownload">
+                        <i class="fas fa-download"></i>
+                        测试下载功能
+                    </button>
+                </div>
+                
+                <div id="testResults" class="test-results"></div>
+            </div>
+
+            <!-- 性能测试 -->
+            <div class="test-section">
+                <h3 class="section-title">性能测试</h3>
+                <div class="test-grid">
+                    <div class="test-item">
+                        <h4>大图片处理</h4>
+                        <p>测试处理大尺寸图片的性能</p>
+                        <button class="btn btn-secondary" id="testLargeImage">测试大图片</button>
+                        <div id="largeImageTest" class="test-result"></div>
+                    </div>
+                    
+                    <div class="test-item">
+                        <h4>多文件处理</h4>
+                        <p>测试同时处理多个文件的性能</p>
+                        <button class="btn btn-secondary" id="testMultipleFiles">测试多文件</button>
+                        <div id="multipleFilesTest" class="test-result"></div>
+                    </div>
+                    
+                    <div class="test-item">
+                        <h4>内存使用</h4>
+                        <p>监控内存使用情况</p>
+                        <div id="memoryTest" class="test-result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 第三方库 -->
+    <script src="lib/jszip.js"></script>
+    
+    <!-- JavaScript文件 -->
+    <script src="js/common.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/image-watermark.js"></script>
+    
+    <script>
+        // 测试功能
+        class WatermarkTester {
+            constructor() {
+                this.runTests();
+                this.bindTestEvents();
+            }
+
+            runTests() {
+                this.testCanvasSupport();
+                this.testFileApiSupport();
+                this.testJSZipSupport();
+                this.testPerformance();
+                this.testWatermarkRendering();
+                this.testPositionCalculation();
+                this.monitorMemory();
+            }
+
+            testCanvasSupport() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const result = document.getElementById('canvasTest');
+                
+                if (ctx) {
+                    result.className = 'test-result test-success';
+                    result.innerHTML = '✅ Canvas API 支持正常';
+                } else {
+                    result.className = 'test-result test-error';
+                    result.innerHTML = '❌ Canvas API 不支持';
+                }
+            }
+
+            testFileApiSupport() {
+                const result = document.getElementById('fileApiTest');
+                
+                if (window.File && window.FileReader && window.FileList && window.Blob) {
+                    result.className = 'test-result test-success';
+                    result.innerHTML = '✅ 文件API 支持正常';
+                } else {
+                    result.className = 'test-result test-error';
+                    result.innerHTML = '❌ 文件API 不支持';
+                }
+            }
+
+            testJSZipSupport() {
+                const result = document.getElementById('jszipTest');
+                
+                if (typeof JSZip !== 'undefined') {
+                    result.className = 'test-result test-success';
+                    result.innerHTML = '✅ JSZip 库加载成功';
+                } else {
+                    result.className = 'test-result test-error';
+                    result.innerHTML = '❌ JSZip 库未加载';
+                }
+            }
+
+            testPerformance() {
+                const result = document.getElementById('performanceTest');
+                const startTime = performance.now();
+                
+                // 创建一个测试canvas
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 1000;
+                canvas.height = 1000;
+                
+                // 绘制一些内容
+                ctx.fillStyle = '#f0f0f0';
+                ctx.fillRect(0, 0, 1000, 1000);
+                
+                const endTime = performance.now();
+                const duration = endTime - startTime;
+                
+                result.className = 'test-result test-info';
+                result.innerHTML = `⏱️ 性能测试完成，耗时: ${duration.toFixed(2)}ms`;
+            }
+
+            testWatermarkRendering() {
+                const result = document.getElementById('watermarkRenderTest');
+                
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 200;
+                    canvas.height = 200;
+                    
+                    // 测试文字水印
+                    ctx.fillStyle = '#f0f0f0';
+                    ctx.fillRect(0, 0, 200, 200);
+                    ctx.fillStyle = '#000000';
+                    ctx.font = '20px Arial';
+                    ctx.fillText('测试水印', 100, 100);
+                    
+                    result.className = 'test-result test-success';
+                    result.innerHTML = '✅ 水印渲染测试通过';
+                } catch (error) {
+                    result.className = 'test-result test-error';
+                    result.innerHTML = '❌ 水印渲染测试失败: ' + error.message;
+                }
+            }
+
+            testPositionCalculation() {
+                const result = document.getElementById('positionTest');
+                
+                try {
+                    // 测试位置计算
+                    const positions = [
+                        { h: 'left', v: 'top' },
+                        { h: 'center', v: 'center' },
+                        { h: 'right', v: 'bottom' }
+                    ];
+                    
+                    const canvasWidth = 1000;
+                    const canvasHeight = 800;
+                    
+                    positions.forEach(pos => {
+                        let x, y;
+                        
+                        switch (pos.h) {
+                            case 'left': x = 50; break;
+                            case 'center': x = canvasWidth / 2; break;
+                            case 'right': x = canvasWidth - 50; break;
+                        }
+                        
+                        switch (pos.v) {
+                            case 'top': y = 50; break;
+                            case 'center': y = canvasHeight / 2; break;
+                            case 'bottom': y = canvasHeight - 50; break;
+                        }
+                        
+                        if (x < 0 || x > canvasWidth || y < 0 || y > canvasHeight) {
+                            throw new Error('位置计算错误');
+                        }
+                    });
+                    
+                    result.className = 'test-result test-success';
+                    result.innerHTML = '✅ 位置计算测试通过';
+                } catch (error) {
+                    result.className = 'test-result test-error';
+                    result.innerHTML = '❌ 位置计算测试失败: ' + error.message;
+                }
+            }
+
+            monitorMemory() {
+                const result = document.getElementById('memoryTest');
+                
+                if (performance.memory) {
+                    const memory = performance.memory;
+                    const usedMB = (memory.usedJSHeapSize / 1024 / 1024).toFixed(2);
+                    const totalMB = (memory.totalJSHeapSize / 1024 / 1024).toFixed(2);
+                    
+                    result.className = 'test-result test-info';
+                    result.innerHTML = `💾 内存使用: ${usedMB}MB / ${totalMB}MB`;
+                } else {
+                    result.className = 'test-result test-info';
+                    result.innerHTML = '💾 内存信息不可用';
+                }
+            }
+
+            bindTestEvents() {
+                document.getElementById('testTextWatermark').addEventListener('click', () => {
+                    this.testTextWatermarkFunction();
+                });
+                
+                document.getElementById('testImageWatermark').addEventListener('click', () => {
+                    this.testImageWatermarkFunction();
+                });
+                
+                document.getElementById('testBatchProcess').addEventListener('click', () => {
+                    this.testBatchProcessFunction();
+                });
+                
+                document.getElementById('testDownload').addEventListener('click', () => {
+                    this.testDownloadFunction();
+                });
+                
+                document.getElementById('testLargeImage').addEventListener('click', () => {
+                    this.testLargeImageFunction();
+                });
+                
+                document.getElementById('testMultipleFiles').addEventListener('click', () => {
+                    this.testMultipleFilesFunction();
+                });
+            }
+
+            testTextWatermarkFunction() {
+                const results = document.getElementById('testResults');
+                results.innerHTML = '<div class="test-result test-info">正在测试文字水印功能...</div>';
+                
+                try {
+                    // 创建测试图片
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 400;
+                    canvas.height = 300;
+                    
+                    // 绘制背景
+                    ctx.fillStyle = '#f0f0f0';
+                    ctx.fillRect(0, 0, 400, 300);
+                    
+                    // 添加文字水印
+                    ctx.globalAlpha = 0.5;
+                    ctx.fillStyle = '#000000';
+                    ctx.font = '24px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('测试水印', 200, 150);
+                    
+                    results.innerHTML = '<div class="test-result test-success">✅ 文字水印测试成功</div>';
+                } catch (error) {
+                    results.innerHTML = `<div class="test-result test-error">❌ 文字水印测试失败: ${error.message}</div>`;
+                }
+            }
+
+            testImageWatermarkFunction() {
+                const results = document.getElementById('testResults');
+                results.innerHTML = '<div class="test-result test-info">正在测试图片水印功能...</div>';
+                
+                try {
+                    // 创建测试图片
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 400;
+                    canvas.height = 300;
+                    
+                    // 绘制背景
+                    ctx.fillStyle = '#f0f0f0';
+                    ctx.fillRect(0, 0, 400, 300);
+                    
+                    // 创建简单的水印图案
+                    ctx.globalAlpha = 0.3;
+                    ctx.fillStyle = '#000000';
+                    ctx.fillRect(150, 100, 100, 100);
+                    
+                    results.innerHTML = '<div class="test-result test-success">✅ 图片水印测试成功</div>';
+                } catch (error) {
+                    results.innerHTML = `<div class="test-result test-error">❌ 图片水印测试失败: ${error.message}</div>`;
+                }
+            }
+
+            testBatchProcessFunction() {
+                const results = document.getElementById('testResults');
+                results.innerHTML = '<div class="test-result test-info">正在测试批量处理功能...</div>';
+                
+                try {
+                    // 模拟批量处理
+                    const testFiles = [
+                        { name: 'test1.jpg', size: 1024 * 1024 },
+                        { name: 'test2.png', size: 2048 * 1024 },
+                        { name: 'test3.webp', size: 512 * 1024 }
+                    ];
+                    
+                    setTimeout(() => {
+                        results.innerHTML = `<div class="test-result test-success">✅ 批量处理测试成功，模拟处理了 ${testFiles.length} 个文件</div>`;
+                    }, 1000);
+                } catch (error) {
+                    results.innerHTML = `<div class="test-result test-error">❌ 批量处理测试失败: ${error.message}</div>`;
+                }
+            }
+
+            testDownloadFunction() {
+                const results = document.getElementById('testResults');
+                results.innerHTML = '<div class="test-result test-info">正在测试下载功能...</div>';
+                
+                try {
+                    // 创建测试文件
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 200;
+                    canvas.height = 200;
+                    
+                    ctx.fillStyle = '#f0f0f0';
+                    ctx.fillRect(0, 0, 200, 200);
+                    ctx.fillStyle = '#000000';
+                    ctx.font = '20px Arial';
+                    ctx.fillText('测试下载', 100, 100);
+                    
+                    canvas.toBlob((blob) => {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'test_watermark.png';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        
+                        results.innerHTML = '<div class="test-result test-success">✅ 下载功能测试成功</div>';
+                    });
+                } catch (error) {
+                    results.innerHTML = `<div class="test-result test-error">❌ 下载功能测试失败: ${error.message}</div>`;
+                }
+            }
+
+            testLargeImageFunction() {
+                const results = document.getElementById('largeImageTest');
+                results.innerHTML = '<div class="test-result test-info">正在测试大图片处理...</div>';
+                
+                try {
+                    const startTime = performance.now();
+                    
+                    // 创建大尺寸测试图片
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 2000;
+                    canvas.height = 1500;
+                    
+                    // 绘制渐变背景
+                    const gradient = ctx.createLinearGradient(0, 0, 2000, 1500);
+                    gradient.addColorStop(0, '#ff6b6b');
+                    gradient.addColorStop(1, '#4ecdc4');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, 2000, 1500);
+                    
+                    // 添加水印
+                    ctx.globalAlpha = 0.3;
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '48px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('大图片测试', 1000, 750);
+                    
+                    const endTime = performance.now();
+                    const duration = endTime - startTime;
+                    
+                    results.innerHTML = `<div class="test-result test-success">✅ 大图片处理测试成功，耗时: ${duration.toFixed(2)}ms</div>`;
+                } catch (error) {
+                    results.innerHTML = `<div class="test-result test-error">❌ 大图片处理测试失败: ${error.message}</div>`;
+                }
+            }
+
+            testMultipleFilesFunction() {
+                const results = document.getElementById('multipleFilesTest');
+                results.innerHTML = '<div class="test-result test-info">正在测试多文件处理...</div>';
+                
+                try {
+                    const startTime = performance.now();
+                    const fileCount = 5;
+                    let processedCount = 0;
+                    
+                    for (let i = 0; i < fileCount; i++) {
+                        setTimeout(() => {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            canvas.width = 400;
+                            canvas.height = 300;
+                            
+                            ctx.fillStyle = '#f0f0f0';
+                            ctx.fillRect(0, 0, 400, 300);
+                            ctx.fillStyle = '#000000';
+                            ctx.font = '20px Arial';
+                            ctx.fillText(`文件 ${i + 1}`, 200, 150);
+                            
+                            processedCount++;
+                            
+                            if (processedCount === fileCount) {
+                                const endTime = performance.now();
+                                const duration = endTime - startTime;
+                                results.innerHTML = `<div class="test-result test-success">✅ 多文件处理测试成功，处理了 ${fileCount} 个文件，耗时: ${duration.toFixed(2)}ms</div>`;
+                            }
+                        }, i * 100);
+                    }
+                } catch (error) {
+                    results.innerHTML = `<div class="test-result test-error">❌ 多文件处理测试失败: ${error.message}</div>`;
+                }
+            }
+        }
+
+        // 初始化测试
+        document.addEventListener('DOMContentLoaded', () => {
+            new WatermarkTester();
+        });
+    </script>
+</body>
+</html> 

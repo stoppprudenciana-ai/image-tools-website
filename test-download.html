@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下载功能测试</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .test-button:hover {
+            background: #0056b3;
+        }
+        
+        .test-result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .test-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .test-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .test-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        .file-info {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1><i class="fas fa-download"></i> 下载功能测试</h1>
+        
+        <div class="test-section">
+            <h2>测试下载功能</h2>
+            <p>测试各种文件类型的下载功能是否正常工作。</p>
+            
+            <div class="file-info">
+                <h4>测试文件类型</h4>
+                <ul>
+                    <li><strong>TXT文件</strong>：纯文本文件</li>
+                    <li><strong>PDF文件</strong>：PDF文档</li>
+                    <li><strong>DOCX文件</strong>：Word文档（XML格式）</li>
+                    <li><strong>DOC文件</strong>：Word 97-2003文档</li>
+                </ul>
+            </div>
+            
+            <div>
+                <button id="downloadTXT" class="test-button">
+                    <i class="fas fa-file-alt"></i> 下载TXT文件
+                </button>
+                <button id="downloadPDF" class="test-button">
+                    <i class="fas fa-file-pdf"></i> 下载PDF文件
+                </button>
+                <button id="downloadDOCX" class="test-button">
+                    <i class="fas fa-file-word"></i> 下载DOCX文件
+                </button>
+                <button id="downloadDOC" class="test-button">
+                    <i class="fas fa-file-word"></i> 下载DOC文件
+                </button>
+            </div>
+            
+            <div id="testResult" class="test-result" style="display: none;">
+                <!-- 测试结果将在这里显示 -->
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>功能说明</h2>
+            <ul>
+                <li><strong>文件生成</strong>：创建各种格式的测试文件</li>
+                <li><strong>下载触发</strong>：使用浏览器原生下载功能</li>
+                <li><strong>错误处理</strong>：提供详细的错误信息</li>
+                <li><strong>状态反馈</strong>：显示下载进度和结果</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- JavaScript文件 -->
+    <script src="js/common.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testResult = document.getElementById('testResult');
+            
+            // 下载TXT文件
+            document.getElementById('downloadTXT').addEventListener('click', function() {
+                testDownload('test.txt', 'text/plain', '这是一个测试TXT文件的内容。\n包含中文和英文。\nThis is a test TXT file content.');
+            });
+            
+            // 下载PDF文件
+            document.getElementById('downloadPDF').addEventListener('click', function() {
+                testDownload('test.pdf', 'application/pdf', 'PDF文件内容（模拟）');
+            });
+            
+            // 下载DOCX文件
+            document.getElementById('downloadDOCX').addEventListener('click', function() {
+                const docxContent = `DOCX文件内容（XML格式）：
+
+=== word/document.xml ===
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+    <w:body>
+        <w:p>
+            <w:r>
+                <w:t>这是一个测试DOCX文件的内容。</w:t>
+            </w:r>
+        </w:p>
+    </w:body>
+</w:document>`;
+                testDownload('test.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', docxContent);
+            });
+            
+            // 下载DOC文件
+            document.getElementById('downloadDOC').addEventListener('click', function() {
+                const docContent = '\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00' + '这是一个测试DOC文件的内容。\r\nThis is a test DOC file content.';
+                testDownload('test.doc', 'application/msword', docContent);
+            });
+            
+            // 测试下载功能
+            function testDownload(filename, mimeType, content) {
+                showResult('正在准备下载...', 'info');
+                
+                try {
+                    // 创建Blob对象
+                    const blob = new Blob([content], { type: mimeType });
+                    
+                    console.log('准备下载文件：', filename);
+                    console.log('文件大小：', blob.size);
+                    console.log('MIME类型：', mimeType);
+                    
+                    // 调用下载函数
+                    Utils.downloadFile(blob, filename);
+                    
+                    showResult(`
+                        <div class="test-success">
+                            <h3>下载测试成功！</h3>
+                            <p>文件名: ${filename}</p>
+                            <p>文件大小: ${formatFileSize(blob.size)}</p>
+                            <p>MIME类型: ${mimeType}</p>
+                            <p>下载应该已经开始，请检查浏览器的下载区域。</p>
+                        </div>
+                    `, 'success');
+                    
+                } catch (error) {
+                    console.error('下载测试失败：', error);
+                    showResult(`
+                        <div class="test-error">
+                            <h3>下载测试失败</h3>
+                            <p>错误信息: ${error.message}</p>
+                            <p>请检查浏览器控制台获取更多信息。</p>
+                        </div>
+                    `, 'error');
+                }
+            }
+            
+            // 显示结果
+            function showResult(message, type) {
+                testResult.innerHTML = message;
+                testResult.className = `test-result test-${type}`;
+                testResult.style.display = 'block';
+            }
+            
+            // 格式化文件大小
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件转换功能测试</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <link rel="stylesheet" href="css/file-convert.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>文件转换功能测试</h1>
+        
+        <div class="test-section">
+            <h2>测试文件转换功能</h2>
+            <p>这个页面用于测试文件转换功能是否正常工作。</p>
+            
+            <div class="test-actions">
+                <button id="testPDFConversion" class="btn btn-primary">
+                    测试PDF转换
+                </button>
+                <button id="testDOCConversion" class="btn btn-primary">
+                    测试DOC转换
+                </button>
+                <button id="testTXTConversion" class="btn btn-primary">
+                    测试TXT转换
+                </button>
+            </div>
+            
+            <div id="testResults" class="test-results">
+                <!-- 测试结果将在这里显示 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 第三方库 -->
+    <script src="lib/pdf.js"></script>
+    <script src="lib/mammoth.js"></script>
+    
+    <!-- JavaScript文件 -->
+    <script src="js/common.js"></script>
+    <script src="js/file-convert.js"></script>
+    
+    <script>
+        // 测试脚本
+        document.addEventListener('DOMContentLoaded', function() {
+            const testResults = document.getElementById('testResults');
+            
+            // 测试PDF转换
+            document.getElementById('testPDFConversion').addEventListener('click', async function() {
+                testResults.innerHTML = '<p>正在测试PDF转换功能...</p>';
+                
+                try {
+                    // 创建一个模拟的PDF文件
+                    const pdfBlob = new Blob(['模拟PDF内容'], { type: 'application/pdf' });
+                    const pdfFile = new File([pdfBlob], 'test.pdf', { type: 'application/pdf' });
+                    
+                    const converter = new FileConverter();
+                    await converter.loadLibraries();
+                    
+                    const result = await converter.performFileConversion(pdfFile, 'txt', 'high');
+                    
+                    testResults.innerHTML = `
+                        <div class="test-success">
+                            <h3>PDF转换测试成功</h3>
+                            <p>原始文件: test.pdf</p>
+                            <p>转换结果: ${result.size} 字节</p>
+                            <p>转换格式: TXT</p>
+                        </div>
+                    `;
+                } catch (error) {
+                    testResults.innerHTML = `
+                        <div class="test-error">
+                            <h3>PDF转换测试失败</h3>
+                            <p>错误信息: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            });
+            
+            // 测试DOC转换
+            document.getElementById('testDOCConversion').addEventListener('click', async function() {
+                testResults.innerHTML = '<p>正在测试DOC转换功能...</p>';
+                
+                try {
+                    // 创建一个模拟的DOC文件
+                    const docBlob = new Blob(['模拟DOC内容'], { type: 'application/msword' });
+                    const docFile = new File([docBlob], 'test.doc', { type: 'application/msword' });
+                    
+                    const converter = new FileConverter();
+                    await converter.loadLibraries();
+                    
+                    const result = await converter.performFileConversion(docFile, 'txt', 'high');
+                    
+                    testResults.innerHTML = `
+                        <div class="test-success">
+                            <h3>DOC转换测试成功</h3>
+                            <p>原始文件: test.doc</p>
+                            <p>转换结果: ${result.size} 字节</p>
+                            <p>转换格式: TXT</p>
+                        </div>
+                    `;
+                } catch (error) {
+                    testResults.innerHTML = `
+                        <div class="test-error">
+                            <h3>DOC转换测试失败</h3>
+                            <p>错误信息: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            });
+            
+            // 测试TXT转换
+            document.getElementById('testTXTConversion').addEventListener('click', async function() {
+                testResults.innerHTML = '<p>正在测试TXT转换功能...</p>';
+                
+                try {
+                    // 创建一个模拟的TXT文件
+                    const txtBlob = new Blob(['模拟TXT内容'], { type: 'text/plain' });
+                    const txtFile = new File([txtBlob], 'test.txt', { type: 'text/plain' });
+                    
+                    const converter = new FileConverter();
+                    await converter.loadLibraries();
+                    
+                    const result = await converter.performFileConversion(txtFile, 'doc', 'high');
+                    
+                    testResults.innerHTML = `
+                        <div class="test-success">
+                            <h3>TXT转换测试成功</h3>
+                            <p>原始文件: test.txt</p>
+                            <p>转换结果: ${result.size} 字节</p>
+                            <p>转换格式: DOC</p>
+                        </div>
+                    `;
+                } catch (error) {
+                    testResults.innerHTML = `
+                        <div class="test-error">
+                            <h3>TXT转换测试失败</h3>
+                            <p>错误信息: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            });
+        });
+    </script>
+    
+    <style>
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .test-actions {
+            margin: 20px 0;
+        }
+        
+        .test-actions .btn {
+            margin-right: 10px;
+        }
+        
+        .test-results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .test-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .test-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</body>
+</html> 

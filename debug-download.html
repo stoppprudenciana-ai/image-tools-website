@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下载功能调试</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .debug-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .debug-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .debug-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .debug-button:hover {
+            background: #0056b3;
+        }
+        
+        .debug-log {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+        
+        .debug-info {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>下载功能调试</h1>
+        
+        <div class="debug-section">
+            <h2>调试信息</h2>
+            <div class="debug-info">
+                <p><strong>浏览器信息：</strong> <span id="browserInfo"></span></p>
+                <p><strong>下载支持：</strong> <span id="downloadSupport"></span></p>
+                <p><strong>Blob支持：</strong> <span id="blobSupport"></span></p>
+            </div>
+            
+            <div>
+                <button id="testDownload" class="debug-button">测试下载</button>
+                <button id="clearLog" class="debug-button">清空日志</button>
+            </div>
+            
+            <div class="debug-log" id="debugLog">
+                <!-- 调试日志将在这里显示 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript文件 -->
+    <script src="js/common.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const debugLog = document.getElementById('debugLog');
+            const browserInfo = document.getElementById('browserInfo');
+            const downloadSupport = document.getElementById('downloadSupport');
+            const blobSupport = document.getElementById('blobSupport');
+            
+            // 检查浏览器信息
+            browserInfo.textContent = navigator.userAgent;
+            downloadSupport.textContent = 'download' in document.createElement('a') ? '支持' : '不支持';
+            blobSupport.textContent = typeof Blob !== 'undefined' ? '支持' : '不支持';
+            
+            // 添加日志
+            function addLog(message) {
+                const timestamp = new Date().toLocaleTimeString();
+                debugLog.innerHTML += `[${timestamp}] ${message}\n`;
+                debugLog.scrollTop = debugLog.scrollHeight;
+                console.log(message);
+            }
+            
+            // 测试下载
+            document.getElementById('testDownload').addEventListener('click', function() {
+                addLog('开始测试下载功能...');
+                
+                try {
+                    // 创建测试文件
+                    const content = '这是一个测试文件的内容。\nThis is a test file content.';
+                    const blob = new Blob([content], { type: 'text/plain' });
+                    
+                    addLog(`创建Blob成功，大小：${blob.size} 字节`);
+                    addLog(`Blob类型：${blob.type}`);
+                    
+                    // 测试下载
+                    addLog('调用Utils.downloadFile...');
+                    Utils.downloadFile(blob, 'test-debug.txt');
+                    
+                    addLog('下载函数调用完成');
+                    
+                } catch (error) {
+                    addLog(`错误：${error.message}`);
+                    console.error('下载测试失败：', error);
+                }
+            });
+            
+            // 清空日志
+            document.getElementById('clearLog').addEventListener('click', function() {
+                debugLog.innerHTML = '';
+            });
+            
+            // 重写Utils.downloadFile以添加调试信息
+            const originalDownloadFile = Utils.downloadFile;
+            Utils.downloadFile = function(blob, filename) {
+                addLog(`Utils.downloadFile被调用，文件名：${filename}`);
+                addLog(`Blob大小：${blob.size}，类型：${blob.type}`);
+                
+                try {
+                    // 检查参数
+                    if (!blob) {
+                        addLog('错误：blob为空');
+                        throw new Error('blob为空');
+                    }
+
+                    if (!filename) {
+                        addLog('错误：文件名为空');
+                        throw new Error('文件名为空');
+                    }
+
+                    // 创建下载链接
+                    addLog('创建URL.createObjectURL...');
+                    const url = URL.createObjectURL(blob);
+                    addLog(`URL创建成功：${url}`);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    a.style.display = 'none';
+                    
+                    addLog('添加到DOM...');
+                    document.body.appendChild(a);
+                    
+                    addLog('触发点击事件...');
+                    a.click();
+                    
+                    addLog('清理资源...');
+                    setTimeout(() => {
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        addLog('资源清理完成');
+                    }, 100);
+
+                    addLog('下载函数执行完成');
+                    
+                } catch (error) {
+                    addLog(`下载失败：${error.message}`);
+                    throw error;
+                }
+            };
+            
+            addLog('调试页面加载完成');
+        });
+    </script>
+</body>
+</html> 

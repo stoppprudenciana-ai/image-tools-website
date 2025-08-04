@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片裁剪功能修复测试</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/image-crop.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .test-button:hover {
+            background: #0056b3;
+        }
+        
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1><i class="fas fa-bug"></i> 图片裁剪功能修复测试</h1>
+        
+        <div class="test-section">
+            <h2>问题诊断</h2>
+            <div id="diagnosticResults">
+                <div class="status info">正在检查系统状态...</div>
+            </div>
+            
+            <button class="test-button" onclick="runDiagnostics()">
+                <i class="fas fa-search"></i> 重新诊断
+            </button>
+        </div>
+        
+        <div class="test-section">
+            <h2>功能测试</h2>
+            <button class="test-button" onclick="testImageUpload()">
+                <i class="fas fa-upload"></i> 测试图片上传
+            </button>
+            <button class="test-button" onclick="testCanvasSetup()">
+                <i class="fas fa-paint-brush"></i> 测试画布设置
+            </button>
+            <button class="test-button" onclick="testCropFrame()">
+                <i class="fas fa-crop-alt"></i> 测试裁剪框
+            </button>
+            <button class="test-button" onclick="openCropPage()">
+                <i class="fas fa-external-link-alt"></i> 打开裁剪页面
+            </button>
+        </div>
+        
+        <div class="test-section">
+            <h2>修复说明</h2>
+            <ul>
+                <li><strong>加载状态修复</strong>：修复了 Utils.showLoading 和 Utils.hideLoading 的调用问题</li>
+                <li><strong>错误处理增强</strong>：添加了更完善的错误处理和调试信息</li>
+                <li><strong>图片验证</strong>：增加了图片有效性检查</li>
+                <li><strong>画布检查</strong>：添加了画布和上下文的状态验证</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+        function runDiagnostics() {
+            const results = document.getElementById('diagnosticResults');
+            let html = '';
+            
+            // 检查 Utils 对象
+            if (typeof Utils !== 'undefined') {
+                html += '<div class="status success">✓ Utils 对象可用</div>';
+            } else {
+                html += '<div class="status error">✗ Utils 对象不可用</div>';
+            }
+            
+            // 检查 Canvas API
+            if (typeof HTMLCanvasElement !== 'undefined') {
+                html += '<div class="status success">✓ Canvas API 可用</div>';
+            } else {
+                html += '<div class="status error">✗ Canvas API 不可用</div>';
+            }
+            
+            // 检查 File API
+            if (typeof FileReader !== 'undefined') {
+                html += '<div class="status success">✓ File API 可用</div>';
+            } else {
+                html += '<div class="status error">✗ File API 不可用</div>';
+            }
+            
+            // 检查触摸支持
+            if ('ontouchstart' in window) {
+                html += '<div class="status success">✓ 触摸事件支持</div>';
+            } else {
+                html += '<div class="status info">ℹ 当前设备不支持触摸事件</div>';
+            }
+            
+            // 检查浏览器兼容性
+            const userAgent = navigator.userAgent;
+            if (userAgent.includes('Chrome') || userAgent.includes('Firefox') || userAgent.includes('Safari')) {
+                html += '<div class="status success">✓ 浏览器兼容性良好</div>';
+            } else {
+                html += '<div class="status info">ℹ 浏览器兼容性未知</div>';
+            }
+            
+            results.innerHTML = html;
+        }
+        
+        function testImageUpload() {
+            // 创建测试图片
+            const canvas = document.createElement('canvas');
+            canvas.width = 200;
+            canvas.height = 150;
+            const ctx = canvas.getContext('2d');
+            
+            // 绘制测试图片
+            ctx.fillStyle = '#007bff';
+            ctx.fillRect(0, 0, 200, 150);
+            ctx.fillStyle = 'white';
+            ctx.font = '20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Test Image', 100, 75);
+            
+            // 转换为 Blob
+            canvas.toBlob((blob) => {
+                const file = new File([blob], 'test.png', { type: 'image/png' });
+                
+                // 模拟文件上传
+                const event = {
+                    target: {
+                        files: [file]
+                    }
+                };
+                
+                Utils.showNotification('测试图片已创建，正在模拟上传...', 'info');
+                
+                // 检查文件类型
+                if (!file.type.startsWith('image/')) {
+                    Utils.showNotification('文件类型验证失败', 'error');
+                    return;
+                }
+                
+                Utils.showNotification('文件类型验证通过', 'success');
+                
+            }, 'image/png');
+        }
+        
+        function testCanvasSetup() {
+            try {
+                const canvas = document.createElement('canvas');
+                canvas.width = 800;
+                canvas.height = 600;
+                const ctx = canvas.getContext('2d');
+                
+                if (ctx) {
+                    Utils.showNotification('画布设置测试通过', 'success');
+                } else {
+                    Utils.showNotification('画布上下文获取失败', 'error');
+                }
+            } catch (error) {
+                Utils.showNotification('画布设置测试失败: ' + error.message, 'error');
+            }
+        }
+        
+        function testCropFrame() {
+            try {
+                // 模拟裁剪框数据
+                const cropData = {
+                    x: 100,
+                    y: 100,
+                    width: 200,
+                    height: 150,
+                    ratio: 'free',
+                    rotation: 0,
+                    flipHorizontal: false,
+                    flipVertical: false
+                };
+                
+                // 验证数据有效性
+                if (cropData.width > 0 && cropData.height > 0) {
+                    Utils.showNotification('裁剪框数据验证通过', 'success');
+                } else {
+                    Utils.showNotification('裁剪框数据无效', 'error');
+                }
+            } catch (error) {
+                Utils.showNotification('裁剪框测试失败: ' + error.message, 'error');
+            }
+        }
+        
+        function openCropPage() {
+            window.open('pages/image-crop.html', '_blank');
+        }
+        
+        // 页面加载完成后自动运行诊断
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('图片裁剪功能修复测试页面已加载');
+            runDiagnostics();
+        });
+    </script>
+</body>
+</html> 
