@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词库 - 小鹏的日语笔记</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #ffffff;
+            --accent-color: #ff0000;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.15);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', 'Noto Serif JP', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-light);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 20px;
+        }
+
+        .nav-logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-primary);
+        }
+
+        .nav-link.active {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .nav-link.highlight {
+            background: #FFC107;
+            color: var(--text-primary);
+        }
+
+        .nav-auth {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 14px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-primary:hover {
+            background: #333333;
+        }
+
+        /* 主要内容区域 */
+        .main-content {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+            padding: 40px 20px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 页面头部 */
+        .page-header {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .continue-learning {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .continue-learning:hover {
+            background: #333333;
+        }
+
+        .learning-progress {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        /* 功能板块区域 */
+        .vocabulary-sections {
+            display: grid;
+            gap: 30px;
+        }
+
+        .section {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow-light);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .function-blocks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .function-block {
+            background: var(--bg-primary);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .function-block:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+            border-color: var(--primary-color);
+        }
+
+        .block-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .block-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .block-text {
+            flex: 1;
+        }
+
+        .block-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .block-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* 系统词库图标颜色 */
+        .icon-thematic {
+            background: #FF6B6B;
+            color: white;
+        }
+
+        .icon-jlpt {
+            background: #4ECDC4;
+            color: white;
+        }
+
+        .icon-grade7 {
+            background: #45B7D1;
+            color: white;
+        }
+
+        /* 生词和错词图标颜色 */
+        .icon-new-words {
+            background: #FFA726;
+            color: white;
+        }
+
+        .icon-calendar {
+            background: #EF5350;
+            color: white;
+        }
+
+        .icon-wrong-words {
+            background: #42A5F5;
+            color: white;
+        }
+
+        /* 我的词库图标颜色 */
+        .icon-folder {
+            background: #8D6E63;
+            color: white;
+        }
+
+        .icon-create {
+            background: #66BB6A;
+            color: white;
+        }
+
+        /* 用户分享链接 */
+        .user-share-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .user-share-link a {
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .user-share-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* 意见反馈弹窗样式 */
+        .feedback-modal {
+            display: none; /* 默认隐藏 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999; /* 提高z-index确保在最上层 */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .feedback-modal-content {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow-medium);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .feedback-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .feedback-modal-header h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .feedback-modal-close {
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .feedback-modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .feedback-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .feedback-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 150px;
+            font-family: 'Noto Sans SC', 'Noto Serif JP', sans-serif;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        .feedback-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+
+        .feedback-form button {
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            align-self: flex-end;
+        }
+
+        .feedback-form button:hover {
+            background: #333333;
+        }
+        }
+
+        .feedback-user-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .feedback-user-status i {
+            color: #6c757d;
+        }
+
+
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 15px;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .function-blocks {
+                grid-template-columns: 1fr;
+            }
+
+            .function-block {
+                padding: 20px;
+            }
+
+            .feedback-modal {
+                padding: 30px 20px;
+                width: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 20px 15px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .function-block {
+                padding: 15px;
+            }
+
+            .feedback-modal {
+                padding: 25px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h1>小鹏的日语笔记</h1>
+            </div>
+            <div class="nav-menu">
+                <a href="new-design.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="#" class="nav-link active">
+                    <i class="fas fa-book"></i>
+                    <span>单词库</span>
+                </a>
+                <a href="jlpt-past-papers.html" class="nav-link">
+                    <i class="fas fa-file-alt"></i>
+                    <span>JLPT真题</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-robot"></i>
+                    <span>AI助手</span>
+                </a>
+                <a href="#" class="nav-link highlight">
+                    <i class="fas fa-microphone"></i>
+                    <span>AI口语外教</span>
+                </a>
+                <a href="#" class="nav-link" id="feedbackLink">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>意见反馈</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-plus"></i>
+                    <span>添加桌面</span>
+                </a>
+            </div>
+            <div class="nav-auth">
+                <button class="btn btn-outline">
+                    <i class="fas fa-sign-in-alt"></i>
+                    登录
+                </button>
+                <button class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    注册
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 页面头部 -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">单词库</h1>
+                <div class="learning-progress">高考核心词汇 - Day1(A1 第1页)</div>
+            </div>
+            <a href="#" class="continue-learning">继续学习</a>
+        </div>
+
+        <!-- 功能板块区域 -->
+        <div class="vocabulary-sections">
+            <!-- 系统词库 -->
+            <section class="section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h2 class="section-title">系统词库</h2>
+                </div>
+                <div class="function-blocks">
+                    <div class="function-block">
+                        <div class="block-content">
+                            <div class="block-icon icon-thematic">
+                                <i class="fas fa-coffee"></i>
+                            </div>
+                            <div class="block-text">
+                                <h3 class="block-title">主题单词库</h3>
+                                <p class="block-description">日常生活常见单词</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="function-block">
+                        <div class="block-content">
+                            <div class="block-icon icon-jlpt">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <div class="block-text">
+                                <h3 class="block-title">JLPT</h3>
+                                <p class="block-description">日语能力试验词汇</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="function-block">
+                        <div class="block-content">
+                            <div class="block-icon icon-grade7">
+                                <i class="fas fa-kiwi-bird"></i>
+                            </div>
+                            <div class="block-text">
+                                <h3 class="block-title">人教版七年级</h3>
+                                <p class="block-description">人教版七年级日语词汇</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 生词和错词 -->
+            <section class="section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h2 class="section-title">生词和错词</h2>
+                </div>
+                <div class="function-blocks">
+                    <div class="function-block">
+                        <div class="block-content">
+                            <div class="block-icon icon-new-words">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="block-text">
+                                <h3 class="block-title">生词本</h3>
+                                <p class="block-description">网站标记'不认识的单词</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="function-block">
+                        <div class="block-content">
+                            <div class="block-icon icon-calendar">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="block-text">
+                                <h3 class="block-title">生词日历</h3>
+                                <p class="block-description">按日期查看生词记录</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="function-block">
+                        <div class="block-content">
+                            <div class="block-icon icon-wrong-words">
+                                <i class="fas fa-frown"></i>
+                            </div>
+                            <div class="block-text">
+                                <h3 class="block-title">错词本</h3>
+                                <p class="block-description">听写出错的单词</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 我的词库 -->
+            <section class="section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2 class="section-title">我的词库</h2>
+                </div>
+                <div class="function-blocks">
+                    <div class="function-block">
+                        <div class="block-content">
+                            <div class="block-icon icon-folder">
+                                <i class="fas fa-folder"></i>
+                            </div>
+                            <div class="block-text">
+                                <h3 class="block-title">自定义词库</h3>
+                                <p class="block-description">个人创建的词汇集合</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="function-block">
+                        <div class="block-content">
+                            <div class="block-icon icon-create">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="block-text">
+                                <h3 class="block-title">新建自定义词库</h3>
+                                <p class="block-description">创建属于你的专属词库</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-share-link">
+                    <a href="#">点击查看用户分享的词库</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 意见反馈弹窗 -->
+    <div class="feedback-modal" id="feedbackModal">
+        <div class="feedback-modal-content">
+            <div class="feedback-modal-header">
+                <h3>意见反馈</h3>
+                <span class="feedback-modal-close" id="closeFeedbackModal">&times;</span>
+            </div>
+            <form class="feedback-form" id="feedbackForm">
+                <textarea placeholder="请描述你的问题或建议..." required></textarea>
+                <button type="submit">提交反馈</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 为功能块添加点击事件
+        document.querySelectorAll('.function-block').forEach(block => {
+            block.addEventListener('click', function() {
+                const title = this.querySelector('.block-title').textContent;
+                console.log('点击了:', title);
+                // 这里可以添加具体的跳转逻辑
+            });
+        });
+
+        // 继续学习按钮点击事件
+        document.querySelector('.continue-learning').addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('继续学习');
+            // 这里可以添加继续学习的逻辑
+        });
+
+        // 显示意见反馈模态框
+        function showFeedbackModal() {
+            const modal = document.getElementById('feedbackModal');
+            console.log('弹窗元素:', modal);
+            if (modal) {
+                modal.style.display = 'flex';
+                console.log('弹窗显示状态已设置为flex');
+            } else {
+                console.error('找不到弹窗元素');
+            }
+        }
+
+        // 关闭模态框
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // 提交意见反馈
+        function submitFeedback() {
+            const textarea = document.querySelector('#feedbackForm textarea');
+            if (textarea) {
+                const feedback = textarea.value.trim();
+                if (!feedback) {
+                    alert('请输入反馈内容');
+                    return;
+                }
+                
+                // 显示成功消息
+                alert('感谢您的反馈！我们会认真考虑您的建议。');
+                
+                // 清空输入框并关闭弹窗
+                textarea.value = '';
+                closeModal('feedbackModal');
+            }
+        }
+
+        // 获取用户昵称
+        function getUserNickname(phone) {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.phone === phone);
+            return user ? user.nickname : phone;
+        }
+
+        // 页面加载完成后绑定事件
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定意见反馈链接点击事件
+            const feedbackLink = document.getElementById('feedbackLink');
+            
+            if (feedbackLink) {
+                feedbackLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showFeedbackModal();
+                });
+                console.log('✅ 意见反馈链接事件绑定成功');
+            } else {
+                console.error('❌ 意见反馈链接元素未找到');
+            }
+            
+            // 绑定意见反馈弹窗关闭事件
+            const closeBtn = document.getElementById('closeFeedbackModal');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    closeModal('feedbackModal');
+                });
+            }
+            
+            // 绑定意见反馈表单提交事件
+            const feedbackForm = document.getElementById('feedbackForm');
+            if (feedbackForm) {
+                feedbackForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    submitFeedback();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JLPT词汇库 - 小鹏的日语笔记</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', 'Noto Serif JP', sans-serif;
+            background: #F5F5F5;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        /* 顶部导航栏 */
+        .top-bar {
+            background: #F5F5F5;
+            padding: 15px 0;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .top-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .back-btn {
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #0056b3;
+        }
+
+        /* 主要内容区域 */
+        .main-content {
+            background: white;
+            min-height: calc(100vh - 80px);
+            padding: 40px 20px;
+        }
+
+        .content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 页面标题 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #666666;
+        }
+
+        /* JLPT级别选择 */
+        .jlpt-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .level-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .level-card.n5 {
+            border-color: #28A745;
+        }
+
+        .level-card.n5:hover {
+            border-color: #28A745;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.2);
+        }
+
+        .level-card.n4 {
+            border-color: #007BFF;
+        }
+
+        .level-card.n4:hover {
+            border-color: #007BFF;
+            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.2);
+        }
+
+        .level-card.n3 {
+            border-color: #FFC107;
+        }
+
+        .level-card.n3:hover {
+            border-color: #FFC107;
+            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.2);
+        }
+
+        .level-card.n2 {
+            border-color: #FF6B6B;
+        }
+
+        .level-card.n2:hover {
+            border-color: #FF6B6B;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.2);
+        }
+
+        .level-card.n1 {
+            border-color: #9C27B0;
+        }
+
+        .level-card.n1:hover {
+            border-color: #9C27B0;
+            box-shadow: 0 10px 30px rgba(156, 39, 176, 0.2);
+        }
+
+        .level-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: white;
+        }
+
+        .level-card.n5 .level-icon {
+            background: #28A745;
+        }
+
+        .level-card.n4 .level-icon {
+            background: #007BFF;
+        }
+
+        .level-card.n3 .level-icon {
+            background: #FFC107;
+        }
+
+        .level-card.n2 .level-icon {
+            background: #FF6B6B;
+        }
+
+        .level-card.n1 .level-icon {
+            background: #9C27B0;
+        }
+
+        .level-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333333;
+        }
+
+        .level-description {
+            color: #666666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .level-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666666;
+        }
+
+        /* 词汇学习区域 */
+        .vocabulary-learning {
+            display: none;
+            margin-top: 40px;
+        }
+
+        .vocabulary-learning.active {
+            display: block;
+        }
+
+        .learning-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .learning-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 10px;
+        }
+
+        .learning-subtitle {
+            color: #666666;
+            font-size: 16px;
+        }
+
+        /* 学习模式选择 */
+        .learning-modes {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            background: #F8F9FA;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #666666;
+        }
+
+        .mode-btn.active {
+            background: #007BFF;
+            color: white;
+            border-color: #007BFF;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 单词卡片 */
+        .word-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .word-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .word-card:hover {
+            border-color: #007BFF;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.1);
+        }
+
+        .word-card.flipped .card-front {
+            transform: rotateY(180deg);
+        }
+
+        .word-card.flipped .card-back {
+            transform: rotateY(0deg);
+        }
+
+        .card-front,
+        .card-back {
+            transition: transform 0.6s ease;
+            backface-visibility: hidden;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            padding: 25px;
+        }
+
+        .word-japanese {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 10px;
+            font-family: 'Noto Serif JP', serif;
+        }
+
+        .word-furigana {
+            font-size: 16px;
+            color: #007BFF;
+            margin-bottom: 15px;
+            font-family: 'Noto Serif JP', serif;
+        }
+
+        .word-meaning {
+            font-size: 18px;
+            color: #666666;
+            margin-bottom: 15px;
+        }
+
+        .word-example {
+            font-size: 14px;
+            color: #999999;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .word-example-japanese {
+            font-family: 'Noto Serif JP', serif;
+            margin-bottom: 5px;
+        }
+
+        .word-example-chinese {
+            color: #666666;
+        }
+
+        /* 学习控制 */
+        .learning-controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .control-btn {
+            background: #28A745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: background 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #218838;
+        }
+
+        .control-btn.secondary {
+            background: #6C757D;
+        }
+
+        .control-btn.secondary:hover {
+            background: #5A6268;
+        }
+
+        /* 进度显示 */
+        .progress-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #E0E0E0;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #28A745;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            color: #666666;
+            font-size: 14px;
+        }
+
+        /* 返回按钮 */
+        .return-to-levels {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .return-btn {
+            background: #6C757D;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .return-btn:hover {
+            background: #5A6268;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .jlpt-levels {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .learning-modes {
+                gap: 10px;
+            }
+
+            .mode-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .word-cards {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .learning-title {
+                font-size: 24px;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .level-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .level-card:nth-child(1) { animation-delay: 0.1s; }
+        .level-card:nth-child(2) { animation-delay: 0.2s; }
+        .level-card:nth-child(3) { animation-delay: 0.3s; }
+        .level-card:nth-child(4) { animation-delay: 0.4s; }
+        .level-card:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="top-bar">
+        <div class="top-container">
+                            <h1 class="app-title">小鹏的日语笔记</h1>
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> 返回
+            </button>
+        </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+        <div class="content-container">
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1 class="page-title">JLPT词汇库</h1>
+                <p class="page-subtitle">日语能力试验分级词汇学习</p>
+            </div>
+
+            <!-- JLPT级别选择 -->
+            <div class="jlpt-levels">
+                <div class="level-card n5" onclick="selectLevel('n5')">
+                    <div class="level-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3 class="level-title">N5级别</h3>
+                    <p class="level-description">基础入门 - 掌握基本日常用语</p>
+                    <div class="level-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">800</div>
+                            <div class="stat-label">词汇量</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">100</div>
+                            <div class="stat-label">汉字</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="level-card n4" onclick="selectLevel('n4')">
+                    <div class="level-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3 class="level-title">N4级别</h3>
+                    <p class="level-description">初级进阶 - 理解基本生活场景</p>
+                    <div class="level-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">1500</div>
+                            <div class="stat-label">词汇量</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">300</div>
+                            <div class="stat-label">汉字</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="level-card n3" onclick="selectLevel('n3')">
+                    <div class="level-icon">
+                        <i class="fas fa-tree"></i>
+                    </div>
+                    <h3 class="level-title">N3级别</h3>
+                    <p class="level-description">中级水平 - 理解日常新闻要点</p>
+                    <div class="level-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">3000</div>
+                            <div class="stat-label">词汇量</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">650</div>
+                            <div class="stat-label">汉字</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="level-card n2" onclick="selectLevel('n2')">
+                    <div class="level-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3 class="level-title">N2级别</h3>
+                    <p class="level-description">中高级水平 - 理解复杂文章</p>
+                    <div class="level-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">6000</div>
+                            <div class="stat-label">词汇量</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">1000</div>
+                            <div class="stat-label">汉字</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="level-card n1" onclick="selectLevel('n1')">
+                    <div class="level-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3 class="level-title">N1级别</h3>
+                    <p class="level-description">高级水平 - 理解各种复杂文章</p>
+                    <div class="level-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">10000</div>
+                            <div class="stat-label">词汇量</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">2000</div>
+                            <div class="stat-label">汉字</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 词汇学习区域 -->
+            <div id="vocabulary-learning" class="vocabulary-learning">
+                <div class="learning-header">
+                    <h2 class="learning-title" id="learning-title">N5级别词汇学习</h2>
+                    <p class="learning-subtitle" id="learning-subtitle">基础入门词汇，掌握基本日常用语</p>
+                </div>
+
+                <!-- 学习模式选择 -->
+                <div class="learning-modes">
+                    <div class="mode-btn active" onclick="switchMode('cards')">
+                        <i class="fas fa-credit-card"></i> 单词卡片
+                    </div>
+                    <div class="mode-btn" onclick="switchMode('quiz')">
+                        <i class="fas fa-question-circle"></i> 练习测试
+                    </div>
+                    <div class="mode-btn" onclick="switchMode('review')">
+                        <i class="fas fa-redo"></i> 复习模式
+                    </div>
+                </div>
+
+                <!-- 进度显示 -->
+                <div class="progress-section">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">已学习 0 / 0 个单词</div>
+                </div>
+
+                <!-- 学习控制 -->
+                <div class="learning-controls">
+                    <button class="control-btn" onclick="startLearning()">
+                        <i class="fas fa-play"></i> 开始学习
+                    </button>
+                    <button class="control-btn secondary" onclick="resetProgress()">
+                        <i class="fas fa-redo"></i> 重置进度
+                    </button>
+                </div>
+
+                <!-- 单词卡片 -->
+                <div id="word-cards" class="word-cards">
+                    <!-- N5级别词汇 -->
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">私</div>
+                            <div class="word-furigana">わたし</div>
+                            <div class="word-meaning">我</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">私は学生です。</div>
+                                <div class="word-example-chinese">我是学生。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">学生</div>
+                            <div class="word-furigana">がくせい</div>
+                            <div class="word-meaning">学生</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">彼は大学生です。</div>
+                                <div class="word-example-chinese">他是大学生。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">学校</div>
+                            <div class="word-furigana">がっこう</div>
+                            <div class="word-meaning">学校</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">学校に行きます。</div>
+                                <div class="word-example-chinese">去学校。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">行く</div>
+                            <div class="word-furigana">いく</div>
+                            <div class="word-meaning">去</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">明日、東京に行きます。</div>
+                                <div class="word-example-chinese">明天去东京。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">来る</div>
+                            <div class="word-furigana">くる</div>
+                            <div class="word-meaning">来</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">友達が来ます。</div>
+                                <div class="word-example-chinese">朋友要来。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">見る</div>
+                            <div class="word-furigana">みる</div>
+                            <div class="word-meaning">看</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">映画を見ます。</div>
+                                <div class="word-example-chinese">看电影。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 返回按钮 -->
+                <div class="return-to-levels">
+                    <button class="return-btn" onclick="returnToLevels()">
+                        <i class="fas fa-arrow-up"></i> 返回级别选择
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLevel = '';
+        let currentMode = 'cards';
+        let learningProgress = {
+            n5: 0,
+            n4: 0,
+            n3: 0,
+            n2: 0,
+            n1: 0
+        };
+
+        // 选择JLPT级别
+        function selectLevel(level) {
+            currentLevel = level;
+            
+            // 隐藏级别选择区域
+            document.querySelector('.jlpt-levels').style.display = 'none';
+            
+            // 显示学习区域
+            document.getElementById('vocabulary-learning').classList.add('active');
+            
+            // 更新标题和描述
+            updateLearningInfo(level);
+            
+            // 更新进度
+            updateProgress();
+        }
+
+        // 更新学习信息
+        function updateLearningInfo(level) {
+            const levelInfo = {
+                n5: { title: 'N5级别词汇学习', subtitle: '基础入门词汇，掌握基本日常用语' },
+                n4: { title: 'N4级别词汇学习', subtitle: '初级进阶词汇，理解基本生活场景' },
+                n3: { title: 'N3级别词汇学习', subtitle: '中级水平词汇，理解日常新闻要点' },
+                n2: { title: 'N2级别词汇学习', subtitle: '中高级水平词汇，理解复杂文章' },
+                n1: { title: 'N1级别词汇学习', subtitle: '高级水平词汇，理解各种复杂文章' }
+            };
+            
+            document.getElementById('learning-title').textContent = levelInfo[level].title;
+            document.getElementById('learning-subtitle').textContent = levelInfo[level].subtitle;
+        }
+
+        // 切换学习模式
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // 更新模式按钮状态
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // 根据模式显示不同内容
+            switch(mode) {
+                case 'cards':
+                    document.getElementById('word-cards').style.display = 'grid';
+                    break;
+                case 'quiz':
+                    document.getElementById('word-cards').style.display = 'none';
+                    alert('练习测试模式即将推出！');
+                    break;
+                case 'review':
+                    document.getElementById('word-cards').style.display = 'none';
+                    alert('复习模式即将推出！');
+                    break;
+            }
+        }
+
+        // 翻转卡片
+        function flipCard(card) {
+            card.classList.toggle('flipped');
+            
+            // 如果卡片被翻转，增加学习进度
+            if (card.classList.contains('flipped')) {
+                learningProgress[currentLevel]++;
+                updateProgress();
+            }
+        }
+
+        // 开始学习
+        function startLearning() {
+            alert(`开始学习${currentLevel.toUpperCase()}级别词汇！点击单词卡片可以翻转查看例句。`);
+        }
+
+        // 重置进度
+        function resetProgress() {
+            if (confirm('确定要重置学习进度吗？')) {
+                learningProgress[currentLevel] = 0;
+                updateProgress();
+                
+                // 重置所有卡片状态
+                document.querySelectorAll('.word-card').forEach(card => {
+                    card.classList.remove('flipped');
+                });
+            }
+        }
+
+        // 更新进度显示
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            if (progressFill && progressText) {
+                const totalWords = getTotalWords(currentLevel);
+                const progress = learningProgress[currentLevel];
+                const percentage = (progress / totalWords) * 100;
+                
+                progressFill.style.width = percentage + '%';
+                progressText.textContent = `已学习 ${progress} / ${totalWords} 个单词`;
+            }
+        }
+
+        // 获取级别总单词数
+        function getTotalWords(level) {
+            const wordCounts = {
+                n5: 6,
+                n4: 8,
+                n3: 10,
+                n2: 12,
+                n1: 15
+            };
+            return wordCounts[level] || 0;
+        }
+
+        // 返回级别选择
+        function returnToLevels() {
+            document.querySelector('.jlpt-levels').style.display = 'grid';
+            document.getElementById('vocabulary-learning').classList.remove('active');
+        }
+
+        // 返回上一页
+        function goBack() {
+            window.history.back();
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('JLPT词汇库页面加载完成');
+        });
+    </script>
+</body>
+</html>

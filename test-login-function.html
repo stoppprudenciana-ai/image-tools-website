@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录功能测试</title>
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: #e9ecef;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>登录功能测试页面</h1>
+    
+    <div class="test-section">
+        <h3>测试说明</h3>
+        <p>这个页面用于测试登录功能是否正常工作。请按照以下步骤进行测试：</p>
+        <ol>
+            <li>首先测试注册功能，创建一个新账号</li>
+            <li>然后使用创建的账号进行登录测试</li>
+            <li>检查登录状态是否正确更新</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h3>演示账号信息</h3>
+        <p>系统已预设以下演示账号，您可以直接使用：</p>
+        <ul>
+            <li><strong>账号1：</strong> 13800138000 / 123456</li>
+            <li><strong>账号2：</strong> 13900139000 / 123456</li>
+        </ul>
+        <button class="test-button" onclick="createDemoUsers()">创建演示账号</button>
+        <button class="test-button" onclick="checkUsers()">检查用户列表</button>
+        <div id="userList" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>登录状态检查</h3>
+        <button class="test-button" onclick="checkLoginStatus()">检查当前登录状态</button>
+        <button class="test-button" onclick="clearLoginStatus()">清除登录状态</button>
+        <div id="loginStatus" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>功能测试</h3>
+        <button class="test-button" onclick="testRegistration()">测试注册流程</button>
+        <button class="test-button" onclick="testLogin()">测试登录流程</button>
+        <button class="test-button" onclick="testLogout()">测试退出登录</button>
+        <div id="testResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>返回主页面</h3>
+        <a href="new-design.html" class="test-button" style="text-decoration: none; display: inline-block;">返回主页</a>
+    </div>
+
+    <script>
+        // 创建演示用户数据
+        function createDemoUsers() {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            if (users.length === 0) {
+                const demoUsers = [
+                    {
+                        phone: '13800138000',
+                        nickname: '演示用户1',
+                        password: '123456',
+                        registerTime: new Date().toISOString()
+                    },
+                    {
+                        phone: '13900139000',
+                        nickname: '演示用户2',
+                        password: '123456',
+                        registerTime: new Date().toISOString()
+                    }
+                ];
+                
+                localStorage.setItem('users', JSON.stringify(demoUsers));
+                showResult('✅ 已创建演示用户数据', 'success');
+                checkUsers();
+            } else {
+                showResult('ℹ️ 演示用户数据已存在', 'info');
+            }
+        }
+
+        // 检查用户列表
+        function checkUsers() {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const userListDiv = document.getElementById('userList');
+            
+            if (users.length === 0) {
+                userListDiv.innerHTML = '<span class="error">暂无用户数据</span>';
+                return;
+            }
+            
+            let html = '<h4>当前用户列表：</h4>';
+            users.forEach((user, index) => {
+                html += `<div style="margin: 5px 0; padding: 5px; background: #f8f9fa; border-radius: 3px;">
+                    <strong>用户${index + 1}：</strong> ${user.nickname} (${user.phone})
+                </div>`;
+            });
+            
+            userListDiv.innerHTML = html;
+        }
+
+        // 检查登录状态
+        function checkLoginStatus() {
+            const savedLoginStatus = localStorage.getItem('loginStatus');
+            const statusDiv = document.getElementById('loginStatus');
+            
+            if (!savedLoginStatus) {
+                statusDiv.innerHTML = '<span class="error">未登录</span>';
+                return;
+            }
+            
+            try {
+                const loginData = JSON.parse(savedLoginStatus);
+                if (loginData.isLoggedIn && loginData.phone) {
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const user = users.find(u => u.phone === loginData.phone);
+                    const nickname = user ? user.nickname : loginData.phone;
+                    
+                    statusDiv.innerHTML = `<span class="success">已登录：${nickname} (${loginData.phone})</span>`;
+                } else {
+                    statusDiv.innerHTML = '<span class="error">登录状态异常</span>';
+                }
+            } catch (e) {
+                statusDiv.innerHTML = '<span class="error">登录状态解析失败</span>';
+            }
+        }
+
+        // 清除登录状态
+        function clearLoginStatus() {
+            localStorage.removeItem('loginStatus');
+            showResult('✅ 已清除登录状态', 'success');
+            checkLoginStatus();
+        }
+
+        // 测试注册流程
+        function testRegistration() {
+            showResult('🧪 开始测试注册流程...', 'info');
+            
+            // 模拟注册过程
+            setTimeout(() => {
+                const testUser = {
+                    phone: '15000000000',
+                    nickname: '测试用户',
+                    password: '123456',
+                    registerTime: new Date().toISOString()
+                };
+                
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                users.push(testUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                showResult('✅ 测试用户注册成功！手机号：15000000000，密码：123456', 'success');
+                checkUsers();
+            }, 1000);
+        }
+
+        // 测试登录流程
+        function testLogin() {
+            showResult('🧪 开始测试登录流程...', 'info');
+            
+            // 模拟登录过程
+            setTimeout(() => {
+                const testPhone = '15000000000';
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const user = users.find(u => u.phone === testPhone);
+                
+                if (user) {
+                    // 保存登录状态
+                    localStorage.setItem('loginStatus', JSON.stringify({
+                        isLoggedIn: true,
+                        phone: testPhone,
+                        loginTime: new Date().toISOString()
+                    }));
+                    
+                    showResult('✅ 测试用户登录成功！', 'success');
+                    checkLoginStatus();
+                } else {
+                    showResult('❌ 测试用户不存在，请先运行注册测试', 'error');
+                }
+            }, 1000);
+        }
+
+        // 测试退出登录
+        function testLogout() {
+            showResult('🧪 开始测试退出登录...', 'info');
+            
+            setTimeout(() => {
+                localStorage.removeItem('loginStatus');
+                showResult('✅ 退出登录成功！', 'success');
+                checkLoginStatus();
+            }, 1000);
+        }
+
+        // 显示测试结果
+        function showResult(message, type = 'info') {
+            const resultDiv = document.getElementById('testResult');
+            resultDiv.innerHTML = `<span class="${type}">${message}</span>`;
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('测试页面加载完成');
+            checkUsers();
+            checkLoginStatus();
+        });
+    </script>
+</body>
+</html>

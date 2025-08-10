@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主题单词库 - 小鹏的日语笔记</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', 'Noto Serif JP', sans-serif;
+            background: #F5F5F5;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        /* 顶部导航栏 */
+        .top-bar {
+            background: #F5F5F5;
+            padding: 15px 0;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .top-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .back-btn {
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #0056b3;
+        }
+
+        /* 主要内容区域 */
+        .main-content {
+            background: white;
+            min-height: calc(100vh - 80px);
+            padding: 40px 20px;
+        }
+
+        .content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 页面标题 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #666666;
+        }
+
+        /* 分类选择 */
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            background: #F8F9FA;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #666666;
+        }
+
+        .category-tab.active {
+            background: #007BFF;
+            color: white;
+            border-color: #007BFF;
+        }
+
+        .category-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 单词卡片区域 */
+        .vocabulary-area {
+            display: none;
+        }
+
+        .vocabulary-area.active {
+            display: block;
+        }
+
+        .area-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .area-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 10px;
+        }
+
+        .area-description {
+            color: #666666;
+            font-size: 16px;
+        }
+
+        /* 单词卡片网格 */
+        .words-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .word-card {
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .word-card:hover {
+            border-color: #007BFF;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 123, 255, 0.1);
+        }
+
+        .word-card.flipped .card-front {
+            transform: rotateY(180deg);
+        }
+
+        .word-card.flipped .card-back {
+            transform: rotateY(0deg);
+        }
+
+        .card-front,
+        .card-back {
+            transition: transform 0.6s ease;
+            backface-visibility: hidden;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            padding: 25px;
+        }
+
+        .word-japanese {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 10px;
+            font-family: 'Noto Serif JP', serif;
+        }
+
+        .word-furigana {
+            font-size: 16px;
+            color: #007BFF;
+            margin-bottom: 15px;
+            font-family: 'Noto Serif JP', serif;
+        }
+
+        .word-meaning {
+            font-size: 18px;
+            color: #666666;
+            margin-bottom: 15px;
+        }
+
+        .word-example {
+            font-size: 14px;
+            color: #999999;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .word-example-japanese {
+            font-family: 'Noto Serif JP', serif;
+            margin-bottom: 5px;
+        }
+
+        .word-example-chinese {
+            color: #666666;
+        }
+
+        /* 学习控制 */
+        .learning-controls {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .control-btn {
+            background: #28A745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+            transition: background 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: #218838;
+        }
+
+        .control-btn.secondary {
+            background: #6C757D;
+        }
+
+        .control-btn.secondary:hover {
+            background: #5A6268;
+        }
+
+        /* 进度显示 */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #E0E0E0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #28A745;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #666666;
+            font-size: 14px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .words-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .category-tabs {
+                gap: 10px;
+            }
+
+            .category-tab {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .area-title {
+                font-size: 24px;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .word-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .word-card:nth-child(1) { animation-delay: 0.1s; }
+        .word-card:nth-child(2) { animation-delay: 0.2s; }
+        .word-card:nth-child(3) { animation-delay: 0.3s; }
+        .word-card:nth-child(4) { animation-delay: 0.4s; }
+        .word-card:nth-child(5) { animation-delay: 0.5s; }
+        .word-card:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="top-bar">
+        <div class="top-container">
+                            <h1 class="app-title">小鹏的日语笔记</h1>
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> 返回
+            </button>
+        </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+        <div class="content-container">
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1 class="page-title">主题单词库</h1>
+                <p class="page-subtitle">日常生活常见单词，按主题分类学习</p>
+            </div>
+
+            <!-- 分类选择 -->
+            <div class="category-tabs">
+                <div class="category-tab active" onclick="switchCategory('family')">
+                    <i class="fas fa-home"></i> 家庭生活
+                </div>
+                <div class="category-tab" onclick="switchCategory('food')">
+                    <i class="fas fa-utensils"></i> 饮食文化
+                </div>
+                <div class="category-tab" onclick="switchCategory('transport')">
+                    <i class="fas fa-car"></i> 交通出行
+                </div>
+                <div class="category-tab" onclick="switchCategory('shopping')">
+                    <i class="fas fa-shopping-cart"></i> 购物消费
+                </div>
+            </div>
+
+            <!-- 家庭生活词汇 -->
+            <div id="family" class="vocabulary-area active">
+                <div class="area-header">
+                    <h2 class="area-title">家庭生活词汇</h2>
+                    <p class="area-description">学习家庭成员、家居用品、日常活动等相关词汇</p>
+                </div>
+                
+                <div class="learning-controls">
+                    <button class="control-btn" onclick="startLearning()">
+                        <i class="fas fa-play"></i> 开始学习
+                    </button>
+                    <button class="control-btn secondary" onclick="resetProgress()">
+                        <i class="fas fa-redo"></i> 重置进度
+                    </button>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">已学习 0 / 12 个单词</div>
+
+                <div class="words-grid">
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">家族</div>
+                            <div class="word-furigana">かぞく</div>
+                            <div class="word-meaning">家庭、家族</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">私の家族は4人です。</div>
+                                <div class="word-example-chinese">我的家庭有4个人。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">父</div>
+                            <div class="word-furigana">ちち</div>
+                            <div class="word-meaning">父亲</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">父は会社員です。</div>
+                                <div class="word-example-chinese">父亲是公司职员。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">母</div>
+                            <div class="word-furigana">はは</div>
+                            <div class="word-meaning">母亲</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">母は料理が上手です。</div>
+                                <div class="word-example-chinese">母亲很会做菜。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">家</div>
+                            <div class="word-furigana">いえ</div>
+                            <div class="word-meaning">房子、家</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">新しい家を買いました。</div>
+                                <div class="word-example-chinese">买了新房子。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">部屋</div>
+                            <div class="word-furigana">へや</div>
+                            <div class="word-meaning">房间</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">この部屋は広いです。</div>
+                                <div class="word-example-chinese">这个房间很宽敞。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">朝食</div>
+                            <div class="word-furigana">ちょうしょく</div>
+                            <div class="word-meaning">早餐</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">朝食を食べましょう。</div>
+                                <div class="word-example-chinese">一起吃早餐吧。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 饮食文化词汇 -->
+            <div id="food" class="vocabulary-area">
+                <div class="area-header">
+                    <h2 class="area-title">饮食文化词汇</h2>
+                    <p class="area-description">学习食物名称、烹饪方法、餐厅用语等相关词汇</p>
+                </div>
+                
+                <div class="learning-controls">
+                    <button class="control-btn" onclick="startLearning()">
+                        <i class="fas fa-play"></i> 开始学习
+                    </button>
+                    <button class="control-btn secondary" onclick="resetProgress()">
+                        <i class="fas fa-redo"></i> 重置进度
+                    </button>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFillFood"></div>
+                </div>
+                <div class="progress-text" id="progressTextFood">已学习 0 / 8 个单词</div>
+
+                <div class="words-grid">
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">寿司</div>
+                            <div class="word-furigana">すし</div>
+                            <div class="word-meaning">寿司</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">寿司が大好きです。</div>
+                                <div class="word-example-chinese">我很喜欢寿司。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">ラーメン</div>
+                            <div class="word-furigana">らーめん</div>
+                            <div class="word-meaning">拉面</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">ラーメンを食べに行きましょう。</div>
+                                <div class="word-example-chinese">一起去吃拉面吧。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">お茶</div>
+                            <div class="word-furigana">おちゃ</div>
+                            <div class="word-meaning">茶</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">お茶を飲みましょう。</div>
+                                <div class="word-example-chinese">一起喝茶吧。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">料理</div>
+                            <div class="word-furigana">りょうり</div>
+                            <div class="word-meaning">料理、菜</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">日本料理が好きです。</div>
+                                <div class="word-example-chinese">我喜欢日本料理。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 交通出行词汇 -->
+            <div id="transport" class="vocabulary-area">
+                <div class="area-header">
+                    <h2 class="area-title">交通出行词汇</h2>
+                    <p class="area-description">学习交通工具、方向指示、交通规则等相关词汇</p>
+                </div>
+                
+                <div class="learning-controls">
+                    <button class="control-btn" onclick="startLearning()">
+                        <i class="fas fa-play"></i> 开始学习
+                    </button>
+                    <button class="control-btn secondary" onclick="resetProgress()">
+                        <i class="fas fa-redo"></i> 重置进度
+                    </button>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFillTransport"></div>
+                </div>
+                <div class="progress-text" id="progressTextTransport">已学习 0 / 6 个单词</div>
+
+                <div class="words-grid">
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">電車</div>
+                            <div class="word-furigana">でんしゃ</div>
+                            <div class="word-meaning">电车</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">電車で学校に行きます。</div>
+                                <div class="word-example-chinese">坐电车去学校。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">バス</div>
+                            <div class="word-furigana">ばす</div>
+                            <div class="word-meaning">公交车</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">バス停で待ちましょう。</div>
+                                <div class="word-example-chinese">在公交站等吧。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">駅</div>
+                            <div class="word-furigana">えき</div>
+                            <div class="word-meaning">车站</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">駅まで歩いて行きます。</div>
+                                <div class="word-example-chinese">步行去车站。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 购物消费词汇 -->
+            <div id="shopping" class="vocabulary-area">
+                <div class="area-header">
+                    <h2 class="area-title">购物消费词汇</h2>
+                    <p class="area-description">学习商品种类、价格表达、讨价还价等相关词汇</p>
+                </div>
+                
+                <div class="learning-controls">
+                    <button class="control-btn" onclick="startLearning()">
+                        <i class="fas fa-play"></i> 开始学习
+                    </button>
+                    <button class="control-btn secondary" onclick="resetProgress()">
+                        <i class="fas fa-redo"></i> 重置进度
+                    </button>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFillShopping"></div>
+                </div>
+                <div class="progress-text" id="progressTextShopping">已学习 0 / 5 个单词</div>
+
+                <div class="words-grid">
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">買い物</div>
+                            <div class="word-furigana">かいもの</div>
+                            <div class="word-meaning">购物</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">買い物に行きましょう。</div>
+                                <div class="word-example-chinese">一起去购物吧。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">値段</div>
+                            <div class="word-furigana">ねだん</div>
+                            <div class="word-meaning">价格</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">この値段は高いです。</div>
+                                <div class="word-example-chinese">这个价格很贵。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="word-card" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="word-japanese">安い</div>
+                            <div class="word-furigana">やすい</div>
+                            <div class="word-meaning">便宜的</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="word-example">
+                                <div class="word-example-japanese">この店は安いです。</div>
+                                <div class="word-example-chinese">这家店很便宜。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCategory = 'family';
+        let learningProgress = {
+            family: 0,
+            food: 0,
+            transport: 0,
+            shopping: 0
+        };
+
+        // 切换分类
+        function switchCategory(category) {
+            // 隐藏所有区域
+            document.querySelectorAll('.vocabulary-area').forEach(area => {
+                area.classList.remove('active');
+            });
+            
+            // 显示选中的区域
+            document.getElementById(category).classList.add('active');
+            
+            // 更新分类标签状态
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            currentCategory = category;
+            updateProgress();
+        }
+
+        // 翻转卡片
+        function flipCard(card) {
+            card.classList.toggle('flipped');
+            
+            // 如果卡片被翻转，增加学习进度
+            if (card.classList.contains('flipped')) {
+                learningProgress[currentCategory]++;
+                updateProgress();
+            }
+        }
+
+        // 开始学习
+        function startLearning() {
+            alert('开始学习模式！点击单词卡片可以翻转查看例句。');
+        }
+
+        // 重置进度
+        function resetProgress() {
+            if (confirm('确定要重置学习进度吗？')) {
+                learningProgress[currentCategory] = 0;
+                updateProgress();
+                
+                // 重置所有卡片状态
+                document.querySelectorAll('.word-card').forEach(card => {
+                    card.classList.remove('flipped');
+                });
+            }
+        }
+
+        // 更新进度显示
+        function updateProgress() {
+            const progressFill = document.querySelector(`#${currentCategory} .progress-fill`);
+            const progressText = document.querySelector(`#${currentCategory} .progress-text`);
+            
+            if (progressFill && progressText) {
+                const totalWords = getTotalWords(currentCategory);
+                const progress = learningProgress[currentCategory];
+                const percentage = (progress / totalWords) * 100;
+                
+                progressFill.style.width = percentage + '%';
+                progressText.textContent = `已学习 ${progress} / ${totalWords} 个单词`;
+            }
+        }
+
+        // 获取分类总单词数
+        function getTotalWords(category) {
+            const wordCounts = {
+                family: 6,
+                food: 4,
+                transport: 3,
+                shopping: 3
+            };
+            return wordCounts[category] || 0;
+        }
+
+        // 返回上一页
+        function goBack() {
+            window.history.back();
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('主题单词库页面加载完成');
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

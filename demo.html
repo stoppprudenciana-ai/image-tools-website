@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小鹏的日语笔记 - 功能演示</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .demo-section {
+            padding: 2rem;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .demo-title {
+            text-align: center;
+            color: #4a90e2;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .demo-item {
+            text-align: center;
+            padding: 2rem;
+            border: 2px solid #e3f2fd;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-item:hover {
+            border-color: #4a90e2;
+            transform: translateY(-5px);
+        }
+        
+        .demo-icon {
+            font-size: 3rem;
+            color: #4a90e2;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-description {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .feature-highlight {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .highlight-title {
+            font-size: 2.5rem;
+            color: #1976d2;
+            margin-bottom: 1rem;
+        }
+        
+        .highlight-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .tech-item {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-weight: 500;
+            color: #4a90e2;
+        }
+
+        /* 意见反馈弹窗样式 */
+        .feedback-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .feedback-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .feedback-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .feedback-subtitle {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .feedback-form {
+            margin-bottom: 1.5rem;
+        }
+
+        .feedback-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Noto Sans SC', sans-serif;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        .feedback-textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .feedback-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .btn-cancel {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-send {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-send:hover {
+            background: #357abd;
+            transform: translateY(-1px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* 意见反馈链接样式 */
+        .feedback-link {
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .feedback-link:hover {
+            color: #4a90e2;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>小鹏的日语笔记</h1>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="#" class="nav-link active">功能演示</a>
+                <a href="#" class="nav-link">技术文档</a>
+                <a href="#" class="nav-link">关于我们</a>
+                <a href="#" class="nav-link feedback-link" id="feedbackLink">
+                    <i class="fas fa-comment-dots"></i>
+                    意见反馈
+                </a>
+            </div>
+            <div class="nav-auth">
+                <button class="btn btn-outline">登录</button>
+                <button class="btn btn-primary">注册</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 功能亮点展示 -->
+        <section class="feature-highlight">
+            <h1 class="highlight-title">AI日语口语训练平台</h1>
+            <p class="highlight-subtitle">基于AI技术的智能学习系统，让日语学习变得简单有趣</p>
+            <div class="tech-stack">
+                <div class="tech-item">HTML5</div>
+                <div class="tech-item">CSS3</div>
+                <div class="tech-item">JavaScript ES6+</div>
+                <div class="tech-item">响应式设计</div>
+                <div class="tech-item">AI集成</div>
+            </div>
+        </section>
+
+        <!-- 核心功能演示 -->
+        <section class="demo-section">
+            <h2 class="demo-title">🎯 核心功能展示</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <div class="demo-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI口语外教</h3>
+                    <p class="demo-description">
+                        实时语音对话练习，智能发音评估，个性化训练计划
+                    </p>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-icon">
+                        <i class="fas fa-headphones"></i>
+                    </div>
+                    <h3>听力训练系统</h3>
+                    <p class="demo-description">
+                        隔空投送式设计，JLPT真题听力，分级材料训练
+                    </p>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>智能单词库</h3>
+                    <p class="demo-description">
+                        主题分类词汇，JLPT分级，智能复习算法
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 设计特色演示 -->
+        <section class="demo-section">
+            <h2 class="demo-title">🎨 设计特色</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <div class="demo-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>日式美学</h3>
+                    <p class="demo-description">
+                        清新简约的设计风格，温馨的学习氛围营造
+                    </p>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3>游戏化体验</h3>
+                    <p class="demo-description">
+                        弹窗提醒、隔空投送、来电显示等趣味交互
+                    </p>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>响应式设计</h3>
+                    <p class="demo-description">
+                        支持桌面、平板、手机多设备，完美适配
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 技术架构演示 -->
+        <section class="demo-section">
+            <h2 class="demo-title">⚡ 技术架构</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <div class="demo-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>前端技术</h3>
+                    <p class="demo-description">
+                        HTML5语义化标记，CSS3现代样式，JavaScript ES6+交互
+                    </p>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3>设计系统</h3>
+                    <p class="demo-description">
+                        统一色彩方案，图标系统，字体规范，组件库
+                    </p>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>性能优化</h3>
+                    <p class="demo-description">
+                        CSS3硬件加速，JavaScript防抖，动画优化，响应式优化
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 用户体验演示 -->
+        <section class="demo-section">
+            <h2 class="demo-title">💡 用户体验</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <div class="demo-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>智能提醒</h3>
+                    <p class="demo-description">
+                        适时的学习提醒，个性化学习计划，进度追踪
+                    </p>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>学习分析</h3>
+                    <p class="demo-description">
+                        学习数据可视化，能力评估，学习轨迹分析
+                    </p>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>社交学习</h3>
+                    <p class="demo-description">
+                        学习伙伴系统，挑战赛，排行榜，学习小组
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 快速体验按钮 -->
+        <section class="demo-section">
+            <h2 class="demo-title">🚀 立即体验</h2>
+            <div style="text-align: center;">
+                <a href="index.html" class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2rem;">
+                    <i class="fas fa-play"></i> 开始体验完整功能
+                </a>
+                <p style="margin-top: 1rem; color: #666;">
+                    点击上方按钮，体验完整的AI日语口语训练网站
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- 底部信息 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>如果你觉得我们的网站对你有所帮助,非常欢迎在小红书上给我们留下好评哦!感谢你的支持!</p>
+            <div class="footer-feature">
+                <span class="feature-tag">口语外教</span>
+                <span class="new-badge">NEW</span>
+                <i class="fas fa-play-circle"></i>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 意见反馈弹窗 -->
+    <div id="feedbackModal" class="feedback-modal">
+        <div class="feedback-content">
+            <div class="feedback-header">
+                <h2 class="feedback-title">意见反馈</h2>
+                <p class="feedback-subtitle">如果你发现网站有BUG或者有任何更好的想法,欢迎留言哦~</p>
+            </div>
+            <form class="feedback-form">
+                <textarea 
+                    class="feedback-textarea" 
+                    placeholder="请输入你的宝贵建议"
+                    required
+                ></textarea>
+            </form>
+            <div class="feedback-actions">
+                <button type="button" class="btn-cancel" onclick="hideFeedbackModal()">取消</button>
+                <button type="button" class="btn-send" onclick="submitFeedback()">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 意见反馈弹窗功能
+        function showFeedbackModal() {
+            console.log('显示意见反馈弹窗');
+            const modal = document.getElementById('feedbackModal');
+            if (modal) {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                console.log('弹窗已显示');
+            } else {
+                console.error('找不到弹窗元素');
+            }
+        }
+
+        function hideFeedbackModal() {
+            console.log('隐藏意见反馈弹窗');
+            const modal = document.getElementById('feedbackModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                console.log('弹窗已隐藏');
+            }
+        }
+
+        function submitFeedback() {
+            console.log('提交反馈');
+            const textarea = document.querySelector('.feedback-textarea');
+            if (textarea) {
+                const feedback = textarea.value.trim();
+                if (!feedback) {
+                    alert('请输入反馈内容');
+                    return;
+                }
+                alert('感谢您的反馈！我们会认真考虑您的建议。');
+                textarea.value = '';
+                hideFeedbackModal();
+            }
+        }
+
+        // 页面加载完成后绑定事件
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成，绑定意见反馈事件');
+            
+            // 绑定意见反馈链接点击事件
+            const feedbackLink = document.getElementById('feedbackLink');
+            if (feedbackLink) {
+                feedbackLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('意见反馈被点击了！');
+                    showFeedbackModal();
+                });
+                console.log('意见反馈事件绑定成功');
+            } else {
+                console.error('找不到意见反馈链接');
+            }
+
+            // 点击弹窗外部关闭弹窗
+            const modal = document.getElementById('feedbackModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        hideFeedbackModal();
+                    }
+                });
+            }
+
+            // ESC键关闭弹窗
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    hideFeedbackModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
